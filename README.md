@@ -2,6 +2,13 @@
 
 > **Caso de estudio real:** sistema de análisis de datos construido sobre 52.000+ transacciones financieras y 49.693 registros de ventas de una red de 7 clínicas estéticas en Chile.
 
+## Demo en vivo
+
+| Dashboard | URL | Acceso |
+|---|---|---|
+| **Financiero** (EERR, Flujo, RRHH, Gastos) | [dashboardfinancieronca.netlify.app](https://dashboardfinancieronca.netlify.app/) | Público |
+| **Ventas** (49.693 registros, análisis clientes) | [dashboardventasnca.netlify.app](https://dashboardventasnca.netlify.app/) | Usuario: `admin` / Pass: `nca2026` |
+
 ---
 
 ## Descripción
@@ -74,6 +81,9 @@ Sobre **49.693 registros** y **$6.387M CLP** en ingresos anuales:
 nca-clinica-web-app/
 ├── servidor_nca.py              # App Flask — dashboard financiero (puerto 5000)
 ├── servidor_ventas.py           # App Flask — dashboard de ventas (puerto 5001)
+├── dashboards/
+│   ├── dashboard_financiero_nca.html   # Output generado (financiero)
+│   └── dashboard_ventas_nca.html       # Output generado (ventas)
 ├── inputs/
 │   ├── EERR Flujo de caja_NCA_Final.xlsx
 │   └── Reporte de ventas 2025.xlsx
