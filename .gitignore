@@ -1,0 +1,35 @@
+# Datos sensibles
+users.json
+config.ini
+uploads/
+output/
+
+# Dashboards generados (output)
+output/*.html
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+
+# Entornos virtuales
+venv/
+env/
+.venv/
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# Claude internals
+.claude/settings.json
+.claude/settings.local.json
+.mcp.json
+.claude/output/
