@@ -986,12 +986,12 @@ tr:hover td{{background:var(--s2)}}
 
 <!-- === M3: VENTAS === -->
 <section class="sec" id="m3">
-<h2>Módulo 3 · Ventas Consolidadas 2024–2026</h2>
+<h2>Módulo 3 · Ventas Consolidadas 2024–2025</h2>
 <div class="g4" id="kpi-ventas"></div>
 <div class="c" style="margin-bottom:16px"><h3>Evolución de Ventas Mensuales</h3><div class="cw cw-t"><canvas id="c6"></canvas></div></div>
 <div class="g2">
 <div class="c"><h3>Ventas Anuales por Sucursal</h3><div class="cw cw-t"><canvas id="c7"></canvas></div></div>
-<div class="c"><h3>Participación Interna 2026</h3><div class="cw cw-t"><canvas id="c8"></canvas></div></div>
+<div class="c"><h3>Participación Interna 2025</h3><div class="cw cw-t"><canvas id="c8"></canvas></div></div>
 </div>
 <div id="ib-ventas"></div>
 </section>
@@ -1020,8 +1020,8 @@ tr:hover td{{background:var(--s2)}}
 <h2>Módulo 5 · Gastos de Personal (RRHH)</h2>
 <div class="g4" id="kpi-rrhh"></div>
 <div class="g2">
-<div class="c"><h3>Evolución Mensual RRHH (2025 vs 2026)</h3><div class="cw"><canvas id="c13"></canvas></div></div>
-<div class="c"><h3>RRHH como % de Ventas por Sucursal (2026)</h3><div class="cw"><canvas id="c14"></canvas></div></div>
+<div class="c"><h3>Evolución Mensual RRHH 2025</h3><div class="cw"><canvas id="c13"></canvas></div></div>
+<div class="c"><h3>RRHH como % de Ventas por Sucursal (2025)</h3><div class="cw"><canvas id="c14"></canvas></div></div>
 </div>
 <div class="c" style="margin-bottom:16px"><h3>Composición del Gasto de Personal</h3><div class="cw cw-s"><canvas id="c15"></canvas></div></div>
 <div class="c" style="margin-bottom:16px"><h3>Detalle Composición Personal (acumulado)</h3>
@@ -1282,7 +1282,6 @@ function buildFlujo(){{
 function buildVentas(){{
   const v = D.ventas;
   const pct25 = ((v.total_2025-v.total_2024)/v.total_2024*100).toFixed(1);
-  const pct26 = ((v.total_2026-v.total_2025)/v.total_2025*100).toFixed(1);
   const tickAvg25 = v.ticket_2025.filter(t=>t>0).reduce((a,b)=>a+b,0)/(v.ticket_2025.filter(t=>t>0).length||1);
   const tickAvg24 = v.ticket_2024.filter(t=>t>0).reduce((a,b)=>a+b,0)/(v.ticket_2024.filter(t=>t>0).length||1);
   const tickVar   = ((tickAvg25-tickAvg24)/tickAvg24*100).toFixed(1);
@@ -1290,14 +1289,13 @@ function buildVentas(){{
   document.getElementById('kpi-ventas').innerHTML =
     kpiCard('Venta 2024', MM(v.total_2024),'') +
     kpiCard('Venta 2025', MM(v.total_2025), PCT(parseFloat(pct25)), parseFloat(pct25)>=0?'dg':'dr') +
-    kpiCard('Venta Proy 2026', MM(v.total_2026), PCT(parseFloat(pct26)), parseFloat(pct26)>=0?'dg':'dr') +
-    kpiCard('Promedio Mensual 2026', MM(v.total_2026/12), PCT(parseFloat(tickVar)), parseFloat(tickVar)>=0?'dg':'dr');
+    kpiCard('Promedio Mensual 2025', MM(v.total_2025/12), '', '') +
+    kpiCard('Var. Ticket 2024→2025', PCT(parseFloat(tickVar)), '', parseFloat(tickVar)>=0?'dg':'dr');
 
   // C6 lineas 3 años
   mkChart('c6','line',v.labels,[
     {{label:'2024',data:v.v2024,borderColor:CL.p,borderWidth:2,pointRadius:2,fill:false,tension:.3}},
     {{label:'2025',data:v.v2025,borderColor:CL.a,borderWidth:2,pointRadius:2,fill:false,tension:.3}},
-    {{label:'2026 (Proy.)',data:v.v2026,borderColor:CL.b,borderWidth:2,pointRadius:2,fill:false,tension:.3,borderDash:[4,4]}}
   ],{{scales:{{y:{{ticks:{{callback:v=>MM(v)}}}}}}}});
 
   // C7 barras por sucursal — suc_data keys son strings en JSON
@@ -1305,13 +1303,12 @@ function buildVentas(){{
   mkChart('c7','bar',sucs,[
     {{label:'2024',data:v.suc_totals.map(s=>v.suc_data?.[s.suc]?.['2024']||0),backgroundColor:'rgba(167,139,250,.6)',borderRadius:3}},
     {{label:'2025',data:v.suc_totals.map(s=>v.suc_data?.[s.suc]?.['2025']||0),backgroundColor:'rgba(245,158,11,.6)',borderRadius:3}},
-    {{label:'2026',data:v.suc_totals.map(s=>s.v26),backgroundColor:'rgba(56,189,248,.6)',borderRadius:3}}
   ],{{scales:{{y:{{ticks:{{callback:v=>MM(v)}}}}}}}});
 
-  // C8 donut participacion 2026
+  // C8 donut participacion 2025
   new Chart(document.getElementById('c8'),{{type:'doughnut',data:{{
     labels:v.suc_totals.map(s=>s.suc.replace('NCA ','')),
-    datasets:[{{data:v.suc_totals.map(s=>s.v26),backgroundColor:v.suc_totals.map((_,i)=>PALETTE[i%PALETTE.length]),borderWidth:0}}]
+    datasets:[{{data:v.suc_totals.map(s=>v.suc_data?.[s.suc]?.['2025']||0),backgroundColor:v.suc_totals.map((_,i)=>PALETTE[i%PALETTE.length]),borderWidth:0}}]
   }},options:{{responsive:true,maintainAspectRatio:false,plugins:{{legend:{{position:'right',labels:{{boxWidth:10}}}},tooltip:{{callbacks:{{label:c=>c.label+': '+MM(c.raw)}}}}  }}}}}});
 
   // C11 transacciones
@@ -1329,14 +1326,14 @@ function buildVentas(){{
   // Info boxes
   const ibV = document.getElementById('ib-ventas');
   if(ibV){{
-    if(parseFloat(pct26)>0) ibV.innerHTML+=`<div class="ib ok"><b>🟢 Recuperación parcial en 2026 (+${{pct26}}% vs 2025)</b>Las ventas proyectadas recuperan terreno tras la caída del ${{Math.abs(parseFloat(pct25)).toFixed(1)}}% en 2025. Estacionalidad consistente: Q4 (oct-nov) generan los mejores meses.</div>`;
-    else ibV.innerHTML+=`<div class="ib al"><b>🔴 Caída en ventas 2026 (${{pct26}}% vs 2025)</b>Revisar mix de productos y canales de captación.</div>`;
+    if(parseFloat(pct25)>0) ibV.innerHTML+=`<div class="ib ok"><b>🟢 Ventas 2025 crecieron +${{pct25}}% vs 2024</b>Estacionalidad consistente: Q4 (oct-nov) generan los mejores meses del año.</div>`;
+    else ibV.innerHTML+=`<div class="ib al"><b>🔴 Caída en ventas 2025 (${{pct25}}% vs 2024)</b>Revisar mix de productos y canales de captación.</div>`;
     // Face & Body contraction
     const fbKey=Object.keys(v.suc_data).find(k=>k.toLowerCase().includes('face'));
     if(fbKey){{
-      const fb24=v.suc_data[fbKey]['2024']||0, fb26=v.suc_data[fbKey]['2026']||0;
-      if(fb24>0&&fb26<fb24*0.85)
-        ibV.innerHTML+=`<div class="ib cau"><b>🟡 ${{fbKey.replace('NCA ','')}}: contracción acumulada del ${{((fb24-fb26)/fb24*100).toFixed(0)}}% desde 2024</b>Pasó de ${{MM(fb24)}} (2024) a ${{MM(fb26)}} (2026). Therapy creció por nueva operación pero con costos RRHH que superan sus ingresos.</div>`;
+      const fb24=v.suc_data[fbKey]['2024']||0, fb25=v.suc_data[fbKey]['2025']||0;
+      if(fb24>0&&fb25<fb24*0.85)
+        ibV.innerHTML+=`<div class="ib cau"><b>🟡 ${{fbKey.replace('NCA ','')}}: contracción del ${{((fb24-fb25)/fb24*100).toFixed(0)}}% desde 2024</b>Pasó de ${{MM(fb24)}} (2024) a ${{MM(fb25)}} (2025). Revisar mix de tratamientos y estrategia comercial.</div>`;
     }}
     if(parseFloat(tickVar)<-10) ibV.innerHTML+=`<div class="ib al"><b>🔴 Ticket promedio cayó de ${{CLP(v.ticket_2024[0])}} (ene-24) a ${{CLP(v.ticket_2025[11])}} (dic-25): ${{tickVar}}%</b>La caída sostenida del ticket sugiere más descuentos, promociones agresivas o migración hacia tratamientos de menor valor.</div>`;
   }}
@@ -1389,19 +1386,18 @@ function buildDetalle(){{
 // ── M5 RRHH ───────────────────────────────────────────────────────────────
 function buildRRHH(){{
   const r = D.rrhh;
-  const var_pct = ((r.total_2026-r.total_2025)/r.total_2025*100).toFixed(1);
-  const ratio   = (r.total_2026/D.ventas.total_2026*100).toFixed(1);
+  const ratio   = (r.total_2025/D.ventas.total_2025*100).toFixed(1);
+  const mensual_2025 = r.r2025.filter(v=>v>0).length ? r.r2025.reduce((s,v)=>s+v,0)/r.r2025.filter(v=>v>0).length : 0;
 
   document.getElementById('kpi-rrhh').innerHTML =
     kpiCard('RRHH 2025', MM(r.total_2025),'') +
-    kpiCard('RRHH 2026', MM(r.total_2026), PCT(parseFloat(var_pct)), parseFloat(var_pct)>0?'dr':'dg') +
-    kpiCard('RRHH/Ventas 2026', ratio+'%', '', parseFloat(ratio)>50?'dr':parseFloat(ratio)>35?'da':'dg') +
-    kpiCard('Costo Mensual Estable', MM(r.r2026.reduce((s,v)=>s+v,0)/r.r2026.filter(v=>v>0).length),'');
+    kpiCard('RRHH/Ventas 2025', ratio+'%', '', parseFloat(ratio)>50?'dr':parseFloat(ratio)>35?'da':'dg') +
+    kpiCard('Costo Mensual 2025', MM(mensual_2025),'') +
+    kpiCard('Meses con Datos', r.r2025.filter(v=>v>0).length+' de 12', '', '');
 
   // C13 lineas
   mkChart('c13','line',r.labels,[
-    {{label:'2025',data:r.r2025,borderColor:CL.p,borderWidth:2,pointRadius:2,fill:false,tension:.3}},
-    {{label:'2026',data:r.r2026,borderColor:CL.r,borderWidth:2,pointRadius:2,fill:false,tension:.3}}
+    {{label:'2025',data:r.r2025,borderColor:CL.p,borderWidth:2,pointRadius:2,fill:false,tension:.3}}
   ],{{scales:{{y:{{ticks:{{callback:v=>MM(v)}}}}}}}});
 
   // C15 donut composicion
@@ -1446,7 +1442,7 @@ function buildRRHH(){{
   const ibR = document.getElementById('ib-rrhh');
   if(ibR){{
     const ratioN = parseFloat(ratio);
-    if(ratioN>70) ibR.innerHTML+=`<div class="ib al"><b>🔴 CRÍTICO: RRHH creció ${{var_pct}}% vs ventas +${{D.kpis.var_ventas.toFixed(1)}}%</b>El ratio RRHH/Ventas saltó de ~45% (2025) a ${{ratio}}% (2026). Un nivel saludable para estética es 35-45%. Requiere plan de reducción de costos de personal.</div>`;
+    if(ratioN>70) ibR.innerHTML+=`<div class="ib al"><b>🔴 CRÍTICO: RRHH/Ventas en ${{ratio}}% — muy sobre umbral recomendado</b>Un nivel saludable para estética es 35-45%. El ratio actual requiere plan de reducción de costos de personal.</div>`;
     // Per-sucursal worst analysis
     const worstSucs=(r.ratio_suc||[]).filter(s=>s.ratio>90).slice(0,2);
     if(worstSucs.length>=2)
