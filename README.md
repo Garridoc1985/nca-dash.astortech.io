@@ -1,146 +1,144 @@
-# NCA Clínicas — Dashboard Financiero & Analítico
+# Desarrollo NCA Beta — Guía de Instalación y Despliegue
 
-> **Caso de estudio real:** sistema de análisis de datos construido sobre 52.000+ transacciones financieras y 49.693 registros de ventas de una red de 7 clínicas estéticas en Chile.
-
-## Demo en vivo
-
-| Dashboard | URL | Acceso |
-|---|---|---|
-| **Financiero** (EERR, Flujo, RRHH, Gastos) | [dashboardfinancieronca.netlify.app](https://dashboardfinancieronca.netlify.app/) | Público |
-| **Ventas** (49.693 registros, análisis clientes) | [dashboardventasnca.netlify.app](https://dashboardventasnca.netlify.app/) | Usuario: `admin` / Pass: `nca2026` |
+Archivos necesarios para instalar y ejecutar el sistema NCA Dashboard en cualquier plataforma: Windows, Ubuntu o Hostinger VPS.
 
 ---
 
-## Descripción
+## Contenido de esta carpeta
 
-Aplicación web local (Flask) que automatiza el proceso de:
-
-1. **Ingesta** de archivos Excel con datos financieros y de ventas
-2. **ETL** y normalización de datos con pandas
-3. **Generación** de dashboards HTML interactivos con Chart.js
-4. **Visualización** en el navegador, sin dependencias de servicios externos
-
-El sistema reemplazó un proceso manual de reportes en Excel que tomaba varias horas, entregando análisis en menos de 30 segundos.
-
----
-
-## Stack Técnico
-
-| Capa | Tecnología |
+| Archivo | Propósito |
 |---|---|
-| Backend | Python 3.12, Flask |
-| ETL / Análisis | pandas, numpy |
-| Visualización | Chart.js 4.4, HTML/CSS/JS |
-| Datos | Excel (.xlsx), MySQL (`nca_db`) |
-| Autenticación | Session-based, users.json |
+| `requirements.txt` | Dependencias Python del proyecto |
+| `wsgi.py` | Punto de entrada WSGI para Gunicorn (producción) |
+| `.env.example` | Plantilla de variables de entorno |
+| `setup.sh` | Instalador automático para Ubuntu/Hostinger |
+| `iniciar.sh` | Launcher para Linux/Mac |
+| `iniciar.bat` | Launcher para Windows |
 
 ---
 
-## Módulos del Dashboard Financiero (`servidor_nca.py`)
+## Instalación en Windows
 
-| Módulo | Contenido |
+**Primera vez:**
+```
+iniciar.bat instalar
+```
+
+**Iniciar servidores:**
+```
+iniciar.bat              → Dashboard Financiero NCA  (http://localhost:5000)
+iniciar.bat ventas       → Dashboard de Ventas       (http://localhost:5001)
+iniciar.bat ambos        → Ambos servidores en paralelo
+```
+
+---
+
+## Instalación en Ubuntu / Hostinger VPS
+
+```bash
+# 1. Clonar el repositorio
+git clone https://github.com/Garridoc1985/nca-dash.astortech.io
+cd nca-dash.astortech.io
+
+# 2. Dar permisos al instalador
+chmod +x "desarrollo NCA Beta/setup.sh"
+
+# 3. Ejecutar instalador (crea venv, instala dependencias, configura .env)
+"desarrollo NCA Beta/setup.sh"
+
+# 4. Iniciar en modo desarrollo
+"desarrollo NCA Beta/iniciar.sh"
+
+# 5. Iniciar en modo producción (Gunicorn)
+"desarrollo NCA Beta/iniciar.sh" prod
+```
+
+---
+
+## Variables de entorno
+
+Copia `.env.example` como `.env` en la raíz del proyecto y completa los valores:
+
+```bash
+cp "desarrollo NCA Beta/.env.example" .env
+```
+
+| Variable | Descripción |
 |---|---|
-| **M1 · EERR** | Estado de Resultados por sucursal — ingresos, costos, margen, cumplimiento presupuesto |
-| **M2 · Flujo de Caja** | Proyección mensual 2026, acumulado, composición de egresos |
-| **M3 · Ventas** | Consolidado histórico 2024–2026 por sucursal |
-| **M4 · Detalle Ventas** | Tratamientos, transacciones, formas de pago, top productos |
-| **M5 · RRHH** | Gastos de personal 2025 vs 2026 por sucursal |
-| **M6 · Gastos Adm/Op** | Gastos administrativos y operativos desglosados |
-| **M7 · No Op + Mkt** | Gastos no operacionales y marketing |
-| **M8 · Conclusiones** | Alertas automáticas, KPIs críticos, plan de acción |
+| `FLASK_SECRET_KEY` | Clave secreta Flask (generar aleatoria en producción) |
+| `NCA_PORT` | Puerto dashboard financiero (default: 5000) |
+| `VENTAS_PORT` | Puerto dashboard ventas (default: 5001) |
+| `FLASK_ENV` | `development` o `production` |
+| `EXCEL_NCA_PATH` | Ruta al Excel NCA (opcional, se puede subir por interfaz) |
+| `ANTHROPIC_API_KEY` | API key de Anthropic (solo para agentes IA) |
 
 ---
 
-## Dashboard de Ventas (`servidor_ventas.py`)
+## Modo producción con Gunicorn
 
-Recibe **cualquier formato de reporte de ventas**, lo normaliza automáticamente y genera visualizaciones de:
-
-- Ingresos por sucursal y por período
-- Top productos por ingresos y por volumen
-- Distribución de formas de pago
-- Análisis de clientes: recurrencia, LTV, segmentación
-- Tendencia mensual y estacionalidad
-
----
-
-## Hallazgos Clave (Datos 2025)
-
-Sobre **49.693 registros** y **$6.387M CLP** en ingresos anuales:
-
-- **NCA Guardia Vieja** genera el 26,2% de los ingresos de la red, con la menor tasa de cortesías (eficiencia comercial benchmark)
-- **Top 10 tratamientos** concentran el 50,2% de los ingresos — zona abdominal domina el catálogo
-- **48,9% de los clientes** compran solo una vez → oportunidad de retención estimada en +$240M CLP anuales
-- **Abril** es el mes valle estructural (-40% vs enero) → anticipar con campañas proactivas en Q1
-- **Mercado Pago** representa el 50,6% de los ingresos — dependencia operativa relevante
-
----
-
-## Estructura del Proyecto
-
-```
-nca-clinica-web-app/
-├── servidor_nca.py              # App Flask — dashboard financiero (puerto 5000)
-├── servidor_ventas.py           # App Flask — dashboard de ventas (puerto 5001)
-├── dashboards/
-│   ├── dashboard_financiero_nca.html   # Output generado (financiero)
-│   └── dashboard_ventas_nca.html       # Output generado (ventas)
-├── inputs/
-│   ├── EERR Flujo de caja_NCA_Final.xlsx
-│   └── Reporte de ventas 2025.xlsx
-├── .claude/skills/
-│   ├── dashboard-financiero-nca/
-│   │   └── generador_nca.py     # Motor ETL + generación HTML (1.999 líneas)
-│   └── data-analytics-pro/scripts/
-│       ├── normalizar_reporte_ventas.py
-│       └── generador_html_ventas.py
-├── config.example.ini           # Configuración de rutas (sin credenciales)
-├── users.example.json           # Estructura de usuarios (sin contraseñas reales)
-└── output/                      # Dashboards HTML generados (git-ignored)
-```
-
----
-
-## Instalación y Uso
-
-### Requisitos
+Para servidores Ubuntu/Hostinger en producción:
 
 ```bash
-pip install flask pandas numpy openpyxl
+source venv/bin/activate
+
+# Dashboard Financiero
+gunicorn --bind 0.0.0.0:5000 --workers 2 --timeout 120 wsgi:app_nca
+
+# Dashboard de Ventas
+gunicorn --bind 0.0.0.0:5001 --workers 2 --timeout 120 wsgi:app_ventas
 ```
-
-### Dashboard Financiero
-
-```bash
-python -X utf8 servidor_nca.py
-# Abre: http://localhost:5000
-```
-
-Flujo: Login → subir Excel NCA → dashboard generado automáticamente
-
-### Dashboard de Ventas
-
-```bash
-python -X utf8 servidor_ventas.py
-# Abre: http://localhost:5001
-```
-
-Flujo: Login → subir reporte de ventas → normalización → visualización
-
-### Credenciales de prueba
-
-Ver `users.example.json` para la estructura. Crear `users.json` con tus credenciales locales (no incluido en el repo por seguridad).
 
 ---
 
-## Notas de Privacidad
+## Requisitos mínimos
 
-- Los archivos en `inputs/` contienen datos reales de un cliente — el repositorio es **privado**
-- El código no expone credenciales ni datos sensibles en texto plano
-- `users.json` y `uploads/` están en `.gitignore`
+| Componente | Versión |
+|---|---|
+| Python | 3.10 o superior |
+| RAM | 512 MB mínimo (1 GB recomendado) |
+| Disco | 200 MB libres |
+| OS | Windows 10+, Ubuntu 20.04+, Debian 11+ |
 
 ---
 
-## Autor
+## Solución de problemas comunes
 
-**Sebastián Garrido** — Product & Data Analyst
-[GitHub](https://github.com/Garridoc1985) · Santiago, Chile · 2026
+**`ModuleNotFoundError: No module named 'flask'`**
+```bash
+pip install -r "desarrollo NCA Beta/requirements.txt"
+```
+
+**`users.json no encontrado`**
+```bash
+cp users.example.json users.json
+# Edita users.json con tus credenciales
+```
+
+**Puerto en uso**
+```bash
+# Cambiar puerto en .env:
+NCA_PORT=5010
+```
+
+**Error al leer Excel**
+El sistema incluye `adaptador_excel.py` que detecta y corrige automáticamente cambios de estructura en el Excel. Si persiste el error, revisa el log en `logs/`.
+
+---
+
+## Estructura de usuarios (`users.json`)
+
+```json
+{
+  "usuarios": [
+    {
+      "usuario": "admin",
+      "contraseña": "tu_contraseña_segura",
+      "nombre": "Administrador"
+    }
+  ]
+}
+```
+
+---
+
+*NCA Clínicas · Astor Tech · 2026*
