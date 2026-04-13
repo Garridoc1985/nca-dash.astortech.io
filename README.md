@@ -1,144 +1,77 @@
-# Desarrollo NCA Beta — Guía de Instalación y Despliegue
+# NCA Clínicas — Dashboard Financiero & Analítico
 
-Archivos necesarios para instalar y ejecutar el sistema NCA Dashboard en cualquier plataforma: Windows, Ubuntu o Hostinger VPS.
-
----
-
-## Contenido de esta carpeta
-
-| Archivo | Propósito |
-|---|---|
-| `requirements.txt` | Dependencias Python del proyecto |
-| `wsgi.py` | Punto de entrada WSGI para Gunicorn (producción) |
-| `.env.example` | Plantilla de variables de entorno |
-| `setup.sh` | Instalador automático para Ubuntu/Hostinger |
-| `iniciar.sh` | Launcher para Linux/Mac |
-| `iniciar.bat` | Launcher para Windows |
+> Sistema de análisis financiero y de ventas para una red de 7 clínicas estéticas en Chile.
+> Desarrollado por **Sebastián Garrido** y **Santiago Mujica** — Astor Tech · 2026
 
 ---
 
-## Instalación en Windows
+## Etapas del desarrollo
 
-**Primera vez:**
-```
-iniciar.bat instalar
-```
+### Etapa 1 — Temprana · Producto base
+> Dashboard funcional con ETL desde Excel, servidores Flask y visualizaciones interactivas.
 
-**Iniciar servidores:**
-```
-iniciar.bat              → Dashboard Financiero NCA  (http://localhost:5000)
-iniciar.bat ventas       → Dashboard de Ventas       (http://localhost:5001)
-iniciar.bat ambos        → Ambos servidores en paralelo
-```
+📄 [Ver documentación → `.claude/skills/README_NCA_proyecto.md`](.claude/skills/README_NCA_proyecto.md)
+
+**Qué incluye:**
+- Dashboard Financiero NCA con 8 módulos (EERR, Flujo, Ventas, RRHH, Gastos, Marketing)
+- Dashboard de Ventas con normalización automática de reportes
+- Autenticación con usuarios configurables
+- Stack: Python, Flask, pandas, Chart.js
 
 ---
 
-## Instalación en Ubuntu / Hostinger VPS
+### Etapa 2 — Media · Pipeline IA de adaptación automática
+> Sistema de 4 agentes que adapta el pipeline cuando el Excel del cliente cambia de estructura.
 
+📄 [Ver documentación → `agentes/README.md`](agentes/README.md)
+
+**Qué incluye:**
+- `inspector.py` — detecta diferencias entre el Excel real y el schema esperado
+- `mapper.py` — usa Claude AI para mapear columnas renombradas
+- `reconstructor.py` — normaliza DataFrames antes del ETL
+- `generador.py` — orquesta el pipeline completo
+- `adaptador_excel.py` — adaptación rápida sin IA (fuzzy matching)
+
+---
+
+### Etapa 3 — Avanzada · Despliegue multi-plataforma
+> Configuración lista para producción en Windows, Ubuntu y Hostinger VPS.
+
+📄 [Ver documentación → `desarrollo NCA Beta/README.md`](desarrollo%20NCA%20Beta/README.md)
+
+**Qué incluye:**
+- Instalador automático para Ubuntu/Hostinger (`setup.sh`)
+- Servidor WSGI con Gunicorn para producción (`wsgi.py`)
+- Variables de entorno seguras (`.env.example`)
+- Launchers para Windows (`iniciar.bat`) y Linux/Mac (`iniciar.sh`)
+
+---
+
+## Inicio rápido
+
+**Windows:**
+```
+iniciar.bat instalar   ← primera vez
+iniciar.bat            ← dashboard financiero  http://localhost:5000
+iniciar.bat ventas     ← dashboard de ventas   http://localhost:5001
+```
+
+**Ubuntu / Hostinger:**
 ```bash
-# 1. Clonar el repositorio
-git clone https://github.com/Garridoc1985/nca-dash.astortech.io
-cd nca-dash.astortech.io
-
-# 2. Dar permisos al instalador
 chmod +x "desarrollo NCA Beta/setup.sh"
-
-# 3. Ejecutar instalador (crea venv, instala dependencias, configura .env)
 "desarrollo NCA Beta/setup.sh"
-
-# 4. Iniciar en modo desarrollo
 "desarrollo NCA Beta/iniciar.sh"
-
-# 5. Iniciar en modo producción (Gunicorn)
-"desarrollo NCA Beta/iniciar.sh" prod
 ```
 
 ---
 
-## Variables de entorno
+## Demo en vivo
 
-Copia `.env.example` como `.env` en la raíz del proyecto y completa los valores:
-
-```bash
-cp "desarrollo NCA Beta/.env.example" .env
-```
-
-| Variable | Descripción |
-|---|---|
-| `FLASK_SECRET_KEY` | Clave secreta Flask (generar aleatoria en producción) |
-| `NCA_PORT` | Puerto dashboard financiero (default: 5000) |
-| `VENTAS_PORT` | Puerto dashboard ventas (default: 5001) |
-| `FLASK_ENV` | `development` o `production` |
-| `EXCEL_NCA_PATH` | Ruta al Excel NCA (opcional, se puede subir por interfaz) |
-| `ANTHROPIC_API_KEY` | API key de Anthropic (solo para agentes IA) |
+| Dashboard | URL | Acceso |
+|---|---|---|
+| **Financiero** | [dashboardfinancieronca.netlify.app](https://dashboardfinancieronca.netlify.app/) | Público |
+| **Ventas** | [dashboardventasnca.netlify.app](https://dashboardventasnca.netlify.app/) | admin / nca2026 |
 
 ---
 
-## Modo producción con Gunicorn
-
-Para servidores Ubuntu/Hostinger en producción:
-
-```bash
-source venv/bin/activate
-
-# Dashboard Financiero
-gunicorn --bind 0.0.0.0:5000 --workers 2 --timeout 120 wsgi:app_nca
-
-# Dashboard de Ventas
-gunicorn --bind 0.0.0.0:5001 --workers 2 --timeout 120 wsgi:app_ventas
-```
-
----
-
-## Requisitos mínimos
-
-| Componente | Versión |
-|---|---|
-| Python | 3.10 o superior |
-| RAM | 512 MB mínimo (1 GB recomendado) |
-| Disco | 200 MB libres |
-| OS | Windows 10+, Ubuntu 20.04+, Debian 11+ |
-
----
-
-## Solución de problemas comunes
-
-**`ModuleNotFoundError: No module named 'flask'`**
-```bash
-pip install -r "desarrollo NCA Beta/requirements.txt"
-```
-
-**`users.json no encontrado`**
-```bash
-cp users.example.json users.json
-# Edita users.json con tus credenciales
-```
-
-**Puerto en uso**
-```bash
-# Cambiar puerto en .env:
-NCA_PORT=5010
-```
-
-**Error al leer Excel**
-El sistema incluye `adaptador_excel.py` que detecta y corrige automáticamente cambios de estructura en el Excel. Si persiste el error, revisa el log en `logs/`.
-
----
-
-## Estructura de usuarios (`users.json`)
-
-```json
-{
-  "usuarios": [
-    {
-      "usuario": "admin",
-      "contraseña": "tu_contraseña_segura",
-      "nombre": "Administrador"
-    }
-  ]
-}
-```
-
----
-
-*NCA Clínicas · Astor Tech · 2026*
+*Repositorio privado · Solo colaboradores autorizados*
