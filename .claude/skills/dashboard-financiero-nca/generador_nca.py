@@ -26,6 +26,12 @@ import sys
 from pathlib import Path
 
 import pandas as pd
+from adaptador_excel import (
+    leer_eerr_robusto,
+    leer_marketing_robusto,
+    leer_hoja_con_header_robusto,
+    diagnosticar_excel,
+)
 
 # Skill está en .claude/skills/dashboard-financiero-nca/ → workspace es 3 niveles arriba
 SKILL_DIR     = Path(__file__).parent
@@ -197,6 +203,7 @@ def categorizar_concepto(tipo_gasto: str) -> str:
 
 def leer_eerr(xl) -> dict:
     """Lee hoja EERR → dict con datos por sucursal del último mes disponible."""
+    return leer_eerr_robusto(xl)
     df = pd.read_excel(xl, sheet_name="EERR", header=None)
 
     # Determinar año/mes
@@ -547,6 +554,7 @@ def leer_no_op(xl) -> dict:
 # ─── ETL: MARKETING ───────────────────────────────────────────────────────────
 
 def leer_marketing(xl) -> dict:
+    return leer_marketing_robusto(xl)
     df = pd.read_excel(xl, sheet_name="MARKETING", header=None)
     # Fila 3 es el header
     df.columns = df.iloc[3].tolist()
@@ -1909,6 +1917,22 @@ def main():
 
         xl = pd.ExcelFile(excel_path, engine="openpyxl")
         logger.info(f"📖 Excel abierto: {excel_path.name} — {len(xl.sheet_names)} hojas")
+
+        # Diagnóstico y auto-adaptación del Excel
+        print("  Analizando estructura del Excel...", end=" ", flush=True)
+        diagnostico = diagnosticar_excel(xl)
+        alertas = [h for h, r in diagnostico.items() if r["estado"] not in ("OK", "ADAPTADO")]
+        adaptados = [h for h, r in diagnostico.items() if r["estado"] == "ADAPTADO"]
+        if adaptados:
+            print(f"ADAPTADO ({', '.join(adaptados)})")
+            for h in adaptados:
+                logger.warning(f"⚠️  Hoja '{h}' adaptada: {diagnostico[h]['detalle']}")
+        elif alertas:
+            print(f"ADVERTENCIAS ({', '.join(alertas)})")
+            for h in alertas:
+                logger.warning(f"⚠️  Hoja '{h}': {diagnostico[h]['detalle']}")
+        else:
+            print("OK")
 
         # ETL: Leyendo módulos
         print("  Leyendo EERR...", end=" ", flush=True)
