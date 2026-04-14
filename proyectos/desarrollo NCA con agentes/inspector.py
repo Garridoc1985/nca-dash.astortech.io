@@ -6,7 +6,7 @@ con el schema esperado. Si hay diferencias (columnas renombradas,
 hojas nuevas, orden cambiado), las reporta para que Mapper las resuelva.
 
 USO:
-    python agentes/inspector.py --file "ruta/al/archivo.xlsx"
+    python "proyectos/desarrollo NCA con agentes/inspector.py" --file "ruta/al/archivo.xlsx"
 """
 
 import json

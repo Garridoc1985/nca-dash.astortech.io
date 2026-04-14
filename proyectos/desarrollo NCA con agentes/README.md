@@ -68,13 +68,13 @@ Excel del cliente
 ### Comando único
 
 ```bash
-python -X utf8 agentes/generador.py --file "ruta/al/archivo.xlsx"
+python -X utf8 proyectos/desarrollo NCA con agentes/generador.py --file "ruta/al/archivo.xlsx"
 ```
 
 ### Con ruta de salida personalizada
 
 ```bash
-python -X utf8 agentes/generador.py \
+python -X utf8 proyectos/desarrollo NCA con agentes/generador.py \
   --file "inputs/EERR_NCA_Final.xlsx" \
   --output "output/dashboard_cliente.html"
 ```
@@ -82,7 +82,7 @@ python -X utf8 agentes/generador.py \
 ### Reutilizando análisis previo (más rápido)
 
 ```bash
-python -X utf8 agentes/generador.py \
+python -X utf8 proyectos/desarrollo NCA con agentes/generador.py \
   --file "inputs/EERR_NCA_Final.xlsx" \
   --skip-inspect
 ```
@@ -91,13 +91,13 @@ python -X utf8 agentes/generador.py \
 
 ```bash
 # Solo inspección
-python -X utf8 agentes/inspector.py --file "archivo.xlsx" --json
+python -X utf8 proyectos/desarrollo NCA con agentes/inspector.py --file "archivo.xlsx" --json
 
 # Solo mapeo (requiere reporte del inspector)
-python -X utf8 agentes/mapper.py
+python -X utf8 proyectos/desarrollo NCA con agentes/mapper.py
 
 # Solo reconstrucción (requiere mapa del mapper)
-python -X utf8 agentes/reconstructor.py --file "archivo.xlsx"
+python -X utf8 proyectos/desarrollo NCA con agentes/reconstructor.py --file "archivo.xlsx"
 ```
 
 ---
@@ -106,8 +106,8 @@ python -X utf8 agentes/reconstructor.py --file "archivo.xlsx"
 
 | Archivo | Generado por | Contenido |
 |---|---|---|
-| `agentes/ultimo_reporte_inspector.json` | Inspector | Estructura real del Excel + diferencias vs. schema |
-| `agentes/ultimo_mapa_columnas.json` | Mapper | Traducción columna_real → columna_esperada |
+| `proyectos/desarrollo NCA con agentes/ultimo_reporte_inspector.json` | Inspector | Estructura real del Excel + diferencias vs. schema |
+| `proyectos/desarrollo NCA con agentes/ultimo_mapa_columnas.json` | Mapper | Traducción columna_real → columna_esperada |
 | `output/dashboard_*.html` | Generador | Dashboard financiero listo para el navegador |
 | `logs/dashboard_nca_*.log` | Generador | Log detallado de la ejecución |
 
@@ -162,7 +162,7 @@ Generador → Dashboard HTML generado en 11 segundos
 ## Estructura de archivos
 
 ```
-agentes/
+proyectos/desarrollo NCA con agentes/
 ├── inspector.py              # Agente 1: detecta diferencias de estructura
 ├── mapper.py                 # Agente 2: genera mapa de columnas con IA
 ├── reconstructor.py          # Agente 3: normaliza DataFrames

@@ -9,9 +9,9 @@ Ese mapa es la "Rosetta Stone" del pipeline: los agentes siguientes
 aunque las columnas hayan cambiado de nombre.
 
 USO:
-    python agentes/mapper.py
-    python agentes/mapper.py --reporte "agentes/ultimo_reporte_inspector.json"
-    python agentes/mapper.py --reporte "agentes/ultimo_reporte_inspector.json" --verbose
+    python "proyectos/desarrollo NCA con agentes/mapper.py"
+    python "proyectos/desarrollo NCA con agentes/mapper.py" --reporte "proyectos/desarrollo NCA con agentes/ultimo_reporte_inspector.json"
+    python "proyectos/desarrollo NCA con agentes/mapper.py" --reporte "proyectos/desarrollo NCA con agentes/ultimo_reporte_inspector.json" --verbose
 """
 
 import json
@@ -243,7 +243,7 @@ def mapear(ruta_reporte: str = str(Path(__file__).parent / "ultimo_reporte_inspe
     ruta = Path(ruta_reporte)
     if not ruta.exists():
         print(f"❌ No se encontró el reporte: {ruta_reporte}")
-        print("   Ejecuta primero: python agentes/inspector.py --file 'ruta.xlsx' --json")
+        print("   Ejecuta primero: python \"proyectos/desarrollo NCA con agentes/inspector.py\" --file 'ruta.xlsx' --json")
         sys.exit(1)
 
     print(f"📄 Leyendo reporte del Inspector: {ruta.name}")

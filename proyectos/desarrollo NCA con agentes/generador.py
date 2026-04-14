@@ -14,9 +14,9 @@ Estrategia de integración:
     4. El motor no sabe que hubo adaptación — ve el schema esperado
 
 USO:
-    python agentes/generador.py --file "ruta/al/archivo.xlsx"
-    python agentes/generador.py --file "ruta.xlsx" --output "output/dashboard.html"
-    python agentes/generador.py --file "ruta.xlsx" --skip-inspect  # usa reporte previo
+    python "proyectos/desarrollo NCA con agentes/generador.py" --file "ruta/al/archivo.xlsx"
+    python "proyectos/desarrollo NCA con agentes/generador.py" --file "ruta.xlsx" --output "output/dashboard.html"
+    python "proyectos/desarrollo NCA con agentes/generador.py" --file "ruta.xlsx" --skip-inspect  # usa reporte previo
 """
 
 import json

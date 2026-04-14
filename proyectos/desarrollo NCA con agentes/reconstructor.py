@@ -7,13 +7,13 @@ Devuelve DataFrames normalizados con los nombres de columna que el Generador esp
 Este agente es un módulo (importable) y también ejecutable directamente para debug.
 
 USO como módulo:
-    from agentes.reconstructor import reconstruir
-    dfs = reconstruir("ruta.xlsx", "agentes/ultimo_mapa_columnas.json")
+    from proyectos.desarrollo_nca_con_agentes.reconstructor import reconstruir
+    dfs = reconstruir("ruta.xlsx", "proyectos/desarrollo NCA con agentes/ultimo_mapa_columnas.json")
     # dfs["1 VENTA"] tiene columnas: Sucursal, Año, Mes, Importe
 
 USO CLI:
-    python agentes/reconstructor.py --file "ruta.xlsx"
-    python agentes/reconstructor.py --file "ruta.xlsx" --mapa "agentes/ultimo_mapa_columnas.json"
+    python "proyectos/desarrollo NCA con agentes/reconstructor.py" --file "ruta.xlsx"
+    python "proyectos/desarrollo NCA con agentes/reconstructor.py" --file "ruta.xlsx" --mapa "proyectos/desarrollo NCA con agentes/ultimo_mapa_columnas.json"
 """
 
 import json
