@@ -81,15 +81,6 @@ Sobre **49.693 registros** y **$6.387M CLP** en ingresos anuales:
 nca-dash.astortech.io/
 ├── servidor_nca.py              # App Flask — dashboard financiero (puerto 5000)
 ├── servidor_ventas.py           # App Flask — dashboard de ventas (puerto 5001)
-├── proyectos/
-│   ├── desarrollo NCA con agentes/   # Pipeline multi-agente (prompt caching)
-│   │   ├── inspector.py              # Agente 1: detecta diferencias de estructura
-│   │   ├── mapper.py                 # Agente 2: genera mapa columna_real → esperada
-│   │   ├── reconstructor.py          # Agente 3: normaliza DataFrames con el mapa
-│   │   └── generador.py              # Agente 4: orquesta pipeline completo
-│   └── desarrollo NCA Beta/          # Scripts de despliegue (Linux/Windows)
-│       ├── setup.sh / iniciar.sh
-│       └── iniciar.bat
 ├── .claude/skills/
 │   ├── dashboard-financiero-nca/
 │   │   ├── generador_nca.py          # Motor ETL + generación HTML (1.999 líneas)
@@ -99,35 +90,6 @@ nca-dash.astortech.io/
 │       └── generador_html_ventas.py
 ├── users.example.json           # Estructura de usuarios (sin contraseñas reales)
 └── output/                      # Dashboards HTML generados (git-ignored)
-```
-
----
-
-## Pipeline Multi-Agente (`proyectos/desarrollo NCA con agentes/`)
-
-Cuando el cliente entrega un Excel con columnas renombradas, el pipeline se adapta automáticamente sin intervención manual:
-
-```
-Excel del cliente
-      │
-      ▼
-  Inspector    →  Detecta columnas faltantes o renombradas (Claude Haiku + prompt caching)
-      │
-      ▼
-   Mapper      →  Genera mapa: columna_real → columna_esperada (Claude Haiku)
-      │
-      ▼
-Reconstructor  →  Normaliza DataFrames aplicando el mapa
-      │
-      ▼
- Generador     →  Llama a generador_nca.py con datos normalizados → dashboard HTML
-```
-
-**Prompt caching:** el system prompt del Inspector (schema NCA + instrucciones) se cachea con `cache_control: ephemeral`, reduciendo latencia y costo en ejecuciones repetidas sobre el mismo tipo de archivo.
-
-**Uso:**
-```bash
-python "proyectos/desarrollo NCA con agentes/generador.py" --file "ruta/al/archivo.xlsx"
 ```
 
 ---
