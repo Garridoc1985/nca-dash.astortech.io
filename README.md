@@ -34,6 +34,8 @@ Login → subir Excel → dashboard HTML generado automáticamente en el navegad
 
 📄 [Ver documentación → `proyectos/desarrollo NCA con agentes/README.md`](proyectos/desarrollo%20NCA%20con%20agentes/README.md)
 
+> **Origen:** creada para explorar cómo funciona un flujo con agentes e IA incorporada. Permite entender el comportamiento del pipeline cuando se delega a Claude AI la detección y resolución de cambios estructurales en los datos.
+
 **Qué incluye:**
 - `inspector.py` — detecta diferencias entre el Excel real y el schema esperado
 - `mapper.py` — usa Claude AI para mapear columnas renombradas
@@ -60,7 +62,7 @@ iniciar.bat instalar   # primera vez
 iniciar.bat            # modo desarrollo
 ```
 
-> **Alcance:** no utiliza agentes de IA. Es la capa de infraestructura y despliegue de los mismos servidores Flask de la Exploración 1, preparados para correr en producción.
+> **Alcance:** no utiliza agentes de IA. Es la capa de infraestructura y despliegue de los mismos servidores Flask de la Exploración 1, preparados para correr en producción. Los elementos desarrollados aquí — instalador, variables de entorno, servidor WSGI — fueron rescatados principalmente para robustecer y operacionalizar la Exploración 1.
 
 **Qué incluye:**
 - Instalador automático para Ubuntu/Hostinger (`setup.sh`)
