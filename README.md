@@ -36,6 +36,8 @@ Login → subir Excel → dashboard HTML generado automáticamente en el navegad
 
 > **Origen:** creada para explorar cómo funciona un flujo con agentes e IA incorporada. Permite entender el comportamiento del pipeline cuando se delega a Claude AI la detección y resolución de cambios estructurales en los datos.
 
+> **Alcance:** utiliza agentes de IA con Claude Haiku. El pipeline delega en Claude la interpretación semántica de columnas renombradas — lo que no es posible resolver de forma determinista. El resto del flujo (reconstrucción, generación del dashboard) sigue siendo Python puro.
+
 **Qué incluye:**
 - `inspector.py` — detecta diferencias entre el Excel real y el schema esperado
 - `mapper.py` — usa Claude AI para mapear columnas renombradas
