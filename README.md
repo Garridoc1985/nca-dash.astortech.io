@@ -14,6 +14,7 @@
 
 **Cómo corre:**
 ```bash
+cd "proyectos/desarrollo NCA primera etapa"
 python -X utf8 servidor_nca.py     # http://localhost:5000
 python -X utf8 servidor_ventas.py  # http://localhost:5001
 ```
@@ -81,7 +82,7 @@ iniciar.bat            ← dashboard financiero  http://localhost:5000
 iniciar.bat ventas     ← dashboard de ventas   http://localhost:5001
 ```
 
-**Ubuntu / Hostinger:**
+**Ubuntu / VPS:**
 ```bash
 chmod +x "proyectos/desarrollo NCA Beta/setup.sh"
 "proyectos/desarrollo NCA Beta/setup.sh"
