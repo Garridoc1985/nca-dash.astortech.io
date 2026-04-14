@@ -10,7 +10,7 @@
 ### Exploración 1 · Motor de Dashboards
 > Dashboard funcional con ETL desde Excel, servidores Flask y visualizaciones interactivas.
 
-📄 [Ver documentación → `github/README_NCA_proyecto.md`](github/README_NCA_proyecto.md)
+📄 [Ver documentación → `proyectos/desarrollo NCA primera etapa/README.md`](proyectos/desarrollo%20NCA%20primera%20etapa/README.md)
 
 **Cómo corre:**
 ```bash
