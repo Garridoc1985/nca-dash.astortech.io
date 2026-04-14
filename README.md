@@ -48,20 +48,16 @@ Login → subir Excel → dashboard HTML generado automáticamente en el navegad
 ---
 
 ### Exploración 3 · Infraestructura y Despliegue
-> Configuración lista para producción en Windows, Ubuntu y VPS.
+> Configuración lista para producción en Ubuntu y VPS.
 
 📄 [Ver documentación → `proyectos/desarrollo NCA Beta/README.md`](proyectos/desarrollo%20NCA%20Beta/README.md)
 
 **Cómo corre:**
 ```bash
-# Ubuntu / Hostinger
+# Ubuntu / VPS
 chmod +x "proyectos/desarrollo NCA Beta/setup.sh"
 "proyectos/desarrollo NCA Beta/setup.sh"   # instala venv + dependencias
 "proyectos/desarrollo NCA Beta/iniciar.sh" # levanta con Gunicorn en producción
-
-# Windows
-iniciar.bat instalar   # primera vez
-iniciar.bat            # modo desarrollo
 ```
 
 > **Alcance:** no utiliza agentes de IA. Es la capa de infraestructura y despliegue de los mismos servidores Flask de la Exploración 1, preparados para correr en producción. Los elementos desarrollados aquí — instalador, variables de entorno, servidor WSGI — fueron rescatados principalmente para robustecer y operacionalizar la Exploración 1.
