@@ -65,7 +65,7 @@ chmod +x "proyectos/desarrollo NCA Beta/setup.sh"
 > **Nota:** esta exploración se instala y corre en un VPS a definir con el cliente.
 
 **Qué incluye:**
-- Instalador automático para cualquier VPS Ubuntu/Debian (`setup.sh`)
+- Instalador automático para cualquier VPS con Ubuntu (`setup.sh`)
 - Servidor WSGI con Gunicorn para producción (`wsgi.py`)
 - Variables de entorno seguras (`.env.example`)
 - Launcher Linux/Mac (`iniciar.sh`)
