@@ -5,9 +5,9 @@
 
 ---
 
-## Etapas del desarrollo
+## Exploraciones
 
-### Etapa 1 — Temprana · Producto base
+### Exploración 1 · Motor de Dashboards
 > Dashboard funcional con ETL desde Excel, servidores Flask y visualizaciones interactivas.
 
 📄 [Ver documentación → `.claude/skills/README_NCA_proyecto.md`](.claude/skills/README_NCA_proyecto.md)
@@ -20,7 +20,7 @@
 
 ---
 
-### Etapa 2 — Media · Pipeline IA de adaptación automática
+### Exploración 2 · Adaptación Inteligente de Datos
 > Sistema de 4 agentes que adapta el pipeline cuando el Excel del cliente cambia de estructura.
 
 📄 [Ver documentación → `agentes/README.md`](agentes/README.md)
@@ -34,7 +34,7 @@
 
 ---
 
-### Etapa 3 — Avanzada · Despliegue multi-plataforma
+### Exploración 3 · Infraestructura y Despliegue
 > Configuración lista para producción en Windows, Ubuntu y Hostinger VPS.
 
 📄 [Ver documentación → `desarrollo NCA Beta/README.md`](desarrollo%20NCA%20Beta/README.md)
