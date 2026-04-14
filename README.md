@@ -12,6 +12,15 @@
 
 📄 [Ver documentación → `github/README_NCA_proyecto.md`](github/README_NCA_proyecto.md)
 
+**Cómo corre:**
+```bash
+python -X utf8 servidor_nca.py     # http://localhost:5000
+python -X utf8 servidor_ventas.py  # http://localhost:5001
+```
+Login → subir Excel → dashboard HTML generado automáticamente en el navegador.
+
+> **Alcance:** no utiliza agentes de IA. El ETL y la generación de visualizaciones son deterministas — pandas + lógica Python pura.
+
 **Qué incluye:**
 - Dashboard Financiero NCA con 8 módulos (EERR, Flujo, Ventas, RRHH, Gastos, Marketing)
 - Dashboard de Ventas con normalización automática de reportes
@@ -38,6 +47,20 @@
 > Configuración lista para producción en Windows, Ubuntu y Hostinger VPS.
 
 📄 [Ver documentación → `proyectos/desarrollo NCA Beta/README.md`](proyectos/desarrollo%20NCA%20Beta/README.md)
+
+**Cómo corre:**
+```bash
+# Ubuntu / Hostinger
+chmod +x "proyectos/desarrollo NCA Beta/setup.sh"
+"proyectos/desarrollo NCA Beta/setup.sh"   # instala venv + dependencias
+"proyectos/desarrollo NCA Beta/iniciar.sh" # levanta con Gunicorn en producción
+
+# Windows
+iniciar.bat instalar   # primera vez
+iniciar.bat            # modo desarrollo
+```
+
+> **Alcance:** no utiliza agentes de IA. Es la capa de infraestructura y despliegue de los mismos servidores Flask de la Exploración 1, preparados para correr en producción.
 
 **Qué incluye:**
 - Instalador automático para Ubuntu/Hostinger (`setup.sh`)
