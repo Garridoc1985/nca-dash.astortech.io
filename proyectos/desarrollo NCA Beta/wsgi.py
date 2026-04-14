@@ -1,7 +1,7 @@
 """
 wsgi.py — Punto de entrada WSGI para producción
 ================================================
-Usado por Gunicorn (Linux/Ubuntu/Hostinger) en lugar de app.run().
+Usado por Gunicorn (Linux/Ubuntu/VPS) en lugar de app.run().
 
 Gunicorn NCA Dashboard:
     gunicorn --bind 0.0.0.0:5000 wsgi:app_nca

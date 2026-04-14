@@ -1,6 +1,6 @@
 # Desarrollo NCA Beta — Guía de Instalación y Despliegue
 
-Archivos necesarios para instalar y ejecutar el sistema NCA Dashboard en cualquier plataforma: Windows, Ubuntu o Hostinger VPS.
+Archivos necesarios para instalar y ejecutar el sistema NCA Dashboard en cualquier plataforma: Windows, Ubuntu o cualquier VPS.
 
 ---
 
@@ -11,7 +11,7 @@ Archivos necesarios para instalar y ejecutar el sistema NCA Dashboard en cualqui
 | `requirements.txt` | Dependencias Python del proyecto |
 | `wsgi.py` | Punto de entrada WSGI para Gunicorn (producción) |
 | `.env.example` | Plantilla de variables de entorno |
-| `setup.sh` | Instalador automático para Ubuntu/Hostinger |
+| `setup.sh` | Instalador automático para Ubuntu/VPS |
 | `iniciar.sh` | Launcher para Linux/Mac |
 | `iniciar.bat` | Launcher para Windows |
 
@@ -33,7 +33,7 @@ iniciar.bat ambos        → Ambos servidores en paralelo
 
 ---
 
-## Instalación en Ubuntu / Hostinger VPS
+## Instalación en Ubuntu / VPS
 
 ```bash
 # 1. Clonar el repositorio
@@ -76,7 +76,7 @@ cp "proyectos/desarrollo NCA Beta/.env.example" .env
 
 ## Modo producción con Gunicorn
 
-Para servidores Ubuntu/Hostinger en producción:
+Para servidores Ubuntu/VPS en producción:
 
 ```bash
 source venv/bin/activate

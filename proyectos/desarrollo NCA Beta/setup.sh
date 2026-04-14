@@ -1,7 +1,7 @@
 #!/bin/bash
 # ============================================================
 # setup.sh — Instalador automático NCA Dashboard
-# Compatible con Ubuntu 20.04+, Debian, Hostinger VPS
+# Compatible con Ubuntu 20.04+, Debian, cualquier VPS
 # ============================================================
 # USO:
 #   chmod +x setup.sh

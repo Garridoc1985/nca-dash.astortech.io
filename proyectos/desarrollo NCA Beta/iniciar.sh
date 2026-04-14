@@ -1,7 +1,7 @@
 #!/bin/bash
 # ============================================================
 # iniciar.sh — Inicia NCA Dashboard (desarrollo o producción)
-# Compatible con: Ubuntu, Debian, macOS, Hostinger VPS
+# Compatible con: Ubuntu, Debian, macOS, cualquier VPS
 # ============================================================
 # USO:
 #   ./iniciar.sh              → Inicia dashboard financiero NCA (puerto 5000)
