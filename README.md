@@ -5,7 +5,7 @@
 
 ---
 
-## Exploraciones
+## Evolución de Exploraciones
 
 ### Exploración 1 · Motor de Dashboards
 > Dashboard funcional con ETL desde Excel, servidores Flask y visualizaciones interactivas.
