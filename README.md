@@ -66,7 +66,7 @@ iniciar.bat            # modo desarrollo
 
 > **Alcance:** no utiliza agentes de IA. Es la capa de infraestructura y despliegue de los mismos servidores Flask de la Exploración 1, preparados para correr en producción. Los elementos desarrollados aquí — instalador, variables de entorno, servidor WSGI — fueron rescatados principalmente para robustecer y operacionalizar la Exploración 1.
 >
-> Esta exploración se instala y corre en un VPS a definir con el cliente.
+> **Nota:** esta exploración se instala y corre en un VPS a definir con el cliente.
 
 **Qué incluye:**
 - Instalador automático para Ubuntu/Hostinger (`setup.sh`)
