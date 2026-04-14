@@ -48,7 +48,7 @@ Login → subir Excel → dashboard HTML generado automáticamente en el navegad
 ---
 
 ### Exploración 3 · Infraestructura y Despliegue
-> Configuración lista para producción en Windows, Ubuntu y Hostinger VPS.
+> Configuración lista para producción en Windows, Ubuntu y VPS.
 
 📄 [Ver documentación → `proyectos/desarrollo NCA Beta/README.md`](proyectos/desarrollo%20NCA%20Beta/README.md)
 
@@ -66,7 +66,7 @@ iniciar.bat            # modo desarrollo
 
 > **Alcance:** no utiliza agentes de IA. Es la capa de infraestructura y despliegue de los mismos servidores Flask de la Exploración 1, preparados para correr en producción. Los elementos desarrollados aquí — instalador, variables de entorno, servidor WSGI — fueron rescatados principalmente para robustecer y operacionalizar la Exploración 1.
 >
-> **Próximo paso:** será instalado y correrá en un VPS a definir en conjunto con el cliente.
+> Esta exploración se instala y corre en un VPS a definir con el cliente.
 
 **Qué incluye:**
 - Instalador automático para Ubuntu/Hostinger (`setup.sh`)
