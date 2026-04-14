@@ -10,7 +10,7 @@
 ### Exploración 1 · Motor de Dashboards
 > Dashboard funcional con ETL desde Excel, servidores Flask y visualizaciones interactivas.
 
-📄 [Ver documentación → `.claude/skills/README_NCA_proyecto.md`](.claude/skills/README_NCA_proyecto.md)
+📄 [Ver documentación → `github/README_NCA_proyecto.md`](github/README_NCA_proyecto.md)
 
 **Qué incluye:**
 - Dashboard Financiero NCA con 8 módulos (EERR, Flujo, Ventas, RRHH, Gastos, Marketing)
@@ -23,7 +23,7 @@
 ### Exploración 2 · Adaptación Inteligente de Datos
 > Sistema de 4 agentes que adapta el pipeline cuando el Excel del cliente cambia de estructura.
 
-📄 [Ver documentación → `agentes/README.md`](agentes/README.md)
+📄 [Ver documentación → `proyectos/desarrollo NCA con agentes/README.md`](proyectos/desarrollo%20NCA%20con%20agentes/README.md)
 
 **Qué incluye:**
 - `inspector.py` — detecta diferencias entre el Excel real y el schema esperado
@@ -37,7 +37,7 @@
 ### Exploración 3 · Infraestructura y Despliegue
 > Configuración lista para producción en Windows, Ubuntu y Hostinger VPS.
 
-📄 [Ver documentación → `desarrollo NCA Beta/README.md`](desarrollo%20NCA%20Beta/README.md)
+📄 [Ver documentación → `proyectos/desarrollo NCA Beta/README.md`](proyectos/desarrollo%20NCA%20Beta/README.md)
 
 **Qué incluye:**
 - Instalador automático para Ubuntu/Hostinger (`setup.sh`)
@@ -58,9 +58,9 @@ iniciar.bat ventas     ← dashboard de ventas   http://localhost:5001
 
 **Ubuntu / Hostinger:**
 ```bash
-chmod +x "desarrollo NCA Beta/setup.sh"
-"desarrollo NCA Beta/setup.sh"
-"desarrollo NCA Beta/iniciar.sh"
+chmod +x "proyectos/desarrollo NCA Beta/setup.sh"
+"proyectos/desarrollo NCA Beta/setup.sh"
+"proyectos/desarrollo NCA Beta/iniciar.sh"
 ```
 
 ---
