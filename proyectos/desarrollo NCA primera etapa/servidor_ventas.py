@@ -25,7 +25,7 @@ from flask import (Flask, request, session, redirect, url_for,
 WORKSPACE    = Path(__file__).resolve().parent
 UPLOAD_DIR   = WORKSPACE / "uploads"
 OUTPUT_DIR   = WORKSPACE / "output"
-GENERADOR    = WORKSPACE / ".claude" / "skills" / "data-analytics-pro" / "scripts" / "normalizar_reporte_ventas.py"
+GENERADOR    = WORKSPACE / "normalizar_reporte_ventas.py"
 USERS_FILE   = WORKSPACE / "users.json"
 PORT         = 5001
 SECRET_KEY   = "ventas-dashboard-2026"

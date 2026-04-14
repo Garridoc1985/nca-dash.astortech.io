@@ -24,8 +24,7 @@ WORKSPACE      = Path(__file__).parent
 UPLOAD_DIR     = WORKSPACE / "uploads"
 OUTPUT_DIR     = WORKSPACE / "output"
 USERS_FILE     = WORKSPACE / "users.json"
-SKILL_DIR      = WORKSPACE / ".claude" / "skills" / "dashboard-financiero-nca"
-GENERADOR      = SKILL_DIR / "generador_nca.py"
+GENERADOR      = WORKSPACE / "generador_nca.py"
 
 UPLOAD_DIR.mkdir(exist_ok=True)
 OUTPUT_DIR.mkdir(exist_ok=True)
