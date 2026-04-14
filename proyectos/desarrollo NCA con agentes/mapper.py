@@ -232,7 +232,7 @@ def imprimir_resumen(mapa: dict) -> None:
 
 # ─── Main ─────────────────────────────────────────────────────────────────────
 
-def mapear(ruta_reporte: str = "agentes/ultimo_reporte_inspector.json",
+def mapear(ruta_reporte: str = str(Path(__file__).parent / "ultimo_reporte_inspector.json"),
            verbose: bool = False) -> dict[str, Any]:
     """Punto de entrada principal del Mapper."""
 
@@ -283,7 +283,7 @@ def mapear(ruta_reporte: str = "agentes/ultimo_reporte_inspector.json",
     imprimir_resumen(mapa)
 
     # 5. Guardar
-    output_path = Path("agentes/ultimo_mapa_columnas.json")
+    output_path = Path(__file__).parent / "ultimo_mapa_columnas.json"
     output_path.write_text(
         json.dumps(mapa, ensure_ascii=False, indent=2),
         encoding="utf-8"
@@ -299,7 +299,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Mapper de columnas — Astor Tech")
     parser.add_argument(
         "--reporte",
-        default="agentes/ultimo_reporte_inspector.json",
+        default=str(Path(__file__).parent / "ultimo_reporte_inspector.json"),
         help="Ruta al reporte JSON del Inspector"
     )
     parser.add_argument(

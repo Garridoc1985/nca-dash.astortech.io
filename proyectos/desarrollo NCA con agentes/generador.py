@@ -28,8 +28,11 @@ from pathlib import Path
 
 import pandas as pd
 
-# Agregar workspace al path para imports entre agentes
-_WORKSPACE_PATH = str(Path(__file__).parent.parent)
+# Agregar directorio actual y workspace al path para imports entre agentes
+_THIS_DIR = str(Path(__file__).parent)
+_WORKSPACE_PATH = str(Path(__file__).parent.parent.parent)
+if _THIS_DIR not in sys.path:
+    sys.path.insert(0, _THIS_DIR)
 if _WORKSPACE_PATH not in sys.path:
     sys.path.insert(0, _WORKSPACE_PATH)
 
@@ -115,7 +118,7 @@ def ejecutar_mapper(reporte: dict, skip: bool = False) -> dict:
 
 def ejecutar_reconstructor(ruta_excel: str, mapa: dict) -> dict:
     """Importa y ejecuta el Reconstructor para obtener DataFrames normalizados."""
-    from agentes.reconstructor import reconstruir, validar_dataframes
+    from reconstructor import reconstruir, validar_dataframes
 
     print("  🔧 Reconstructor: normalizando DataFrames...")
     resultado = reconstruir(

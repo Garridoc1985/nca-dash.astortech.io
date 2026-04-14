@@ -181,17 +181,12 @@ def analizar_con_claude(estructura_real: dict, reporte_basico: dict) -> str:
 
     client = anthropic.Anthropic()
 
-    prompt = f"""Eres un experto en ETL de datos financieros. Analiza las diferencias entre el
+    # Parte estática: instrucciones + schema — se cachea tras la primera llamada (TTL 5 min)
+    system_prompt = f"""Eres un experto en ETL de datos financieros. Analiza las diferencias entre el
 schema esperado y la estructura real de un archivo Excel de una clínica estética.
 
 SCHEMA ESPERADO:
 {json.dumps(SCHEMA_ESPERADO, ensure_ascii=False, indent=2)}
-
-ESTRUCTURA REAL DEL ARCHIVO:
-{json.dumps(estructura_real, ensure_ascii=False, indent=2)}
-
-PROBLEMAS DETECTADOS:
-{json.dumps(reporte_basico, ensure_ascii=False, indent=2)}
 
 Tu tarea:
 1. Para cada columna faltante, sugiere cuál columna real podría ser su equivalente (si existe)
@@ -201,10 +196,24 @@ Tu tarea:
 
 Responde en español, de forma estructurada y concisa."""
 
+    # Parte dinámica: varía por cada archivo Excel procesado
+    user_content = f"""ESTRUCTURA REAL DEL ARCHIVO:
+{json.dumps(estructura_real, ensure_ascii=False, indent=2)}
+
+PROBLEMAS DETECTADOS:
+{json.dumps(reporte_basico, ensure_ascii=False, indent=2)}"""
+
     mensaje = client.messages.create(
         model="claude-haiku-4-5-20251001",
         max_tokens=1024,
-        messages=[{"role": "user", "content": prompt}]
+        system=[
+            {
+                "type": "text",
+                "text": system_prompt,
+                "cache_control": {"type": "ephemeral"},
+            }
+        ],
+        messages=[{"role": "user", "content": user_content}],
     )
 
     return mensaje.content[0].text
@@ -268,6 +277,6 @@ if __name__ == "__main__":
     resultado = inspeccionar(args.file)
 
     if args.json:
-        output_path = Path("agentes/ultimo_reporte_inspector.json")
+        output_path = Path(__file__).parent / "ultimo_reporte_inspector.json"
         output_path.write_text(json.dumps(resultado, ensure_ascii=False, indent=2), encoding="utf-8")
         print(f"\n📄 Reporte guardado en: {output_path}")

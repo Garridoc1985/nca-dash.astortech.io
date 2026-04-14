@@ -88,7 +88,7 @@ def leer_hoja_columnas(xl: pd.ExcelFile, hoja: str,
 
 def reconstruir(
     ruta_excel: str,
-    ruta_mapa: str = "agentes/ultimo_mapa_columnas.json",
+    ruta_mapa: str = str(Path(__file__).parent / "ultimo_mapa_columnas.json"),
     verbose: bool = False
 ) -> dict[str, Any]:
     """
@@ -207,7 +207,7 @@ if __name__ == "__main__":
     parser.add_argument("--file", required=True, help="Ruta al archivo Excel")
     parser.add_argument(
         "--mapa",
-        default="agentes/ultimo_mapa_columnas.json",
+        default=str(Path(__file__).parent / "ultimo_mapa_columnas.json"),
         help="Ruta al mapa de columnas del Mapper"
     )
     args = parser.parse_args()
