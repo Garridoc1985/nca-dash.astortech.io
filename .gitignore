@@ -1,4 +1,5 @@
 # Datos sensibles
+.env
 users.json
 config.ini
 uploads/
