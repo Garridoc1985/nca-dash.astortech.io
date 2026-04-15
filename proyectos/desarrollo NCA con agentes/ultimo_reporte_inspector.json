@@ -1,0 +1,52 @@
+{
+  "archivo": "C:\\Users\\Usuario\\Desktop\\NCA PROYECTO\\EERR FLUJO CAJA NCA_FINAL\\EERR Flujo de caja_NCA_Final.xlsx",
+  "hojas_encontradas": [
+    "EERR",
+    "FLUJO",
+    "0 PARAMETROS",
+    "PRESUPUESTO",
+    "VENTAS DETALLE",
+    "1 VENTA",
+    "2 RRHH",
+    "3 GS ADMIN",
+    "4 GS OP",
+    "5 GS NO OP",
+    "6 EXTRAORDINARIOS",
+    "PROVEEDORES",
+    "PAGOS PENDIENTES",
+    "MARKETING",
+    "DASHBOARD VENTA",
+    "KPIs",
+    "Arriendos",
+    "AUX"
+  ],
+  "reporte": {
+    "hojas_ok": [
+      "EERR",
+      "FLUJO",
+      "1 VENTA",
+      "VENTAS DETALLE",
+      "2 RRHH",
+      "3 GS ADMIN",
+      "4 GS OP",
+      "5 GS NO OP",
+      "MARKETING"
+    ],
+    "hojas_faltantes": [],
+    "hojas_nuevas": [
+      "6 EXTRAORDINARIOS",
+      "DASHBOARD VENTA",
+      "Arriendos",
+      "KPIs",
+      "0 PARAMETROS",
+      "PRESUPUESTO",
+      "AUX",
+      "PROVEEDORES",
+      "PAGOS PENDIENTES"
+    ],
+    "problemas_columnas": [],
+    "hojas_con_pocas_filas": []
+  },
+  "analisis_claude": "✅ Estructura compatible con el schema esperado. No se requiere intervención.",
+  "estado": "OK"
+}

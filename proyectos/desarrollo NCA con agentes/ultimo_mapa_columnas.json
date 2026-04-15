@@ -1,0 +1,19 @@
+{
+  "version": "1.0",
+  "mapa_columnas": {},
+  "columnas_ausentes": [],
+  "hojas_sin_cambios": [
+    "EERR",
+    "FLUJO",
+    "1 VENTA",
+    "VENTAS DETALLE",
+    "2 RRHH",
+    "3 GS ADMIN",
+    "4 GS OP",
+    "5 GS NO OP",
+    "MARKETING"
+  ],
+  "resumen": {
+    "listo_para_pipeline": true
+  }
+}
