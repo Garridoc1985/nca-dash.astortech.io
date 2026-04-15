@@ -61,10 +61,10 @@ tr:hover td{background:var(--s2)}
 <body>
 <div class="ctn">
 <h1>NCA Clínicas — Análisis Financiero Integral</h1>
-<p class="sub">EERR · Flujo de Caja · Ventas · RRHH · Gastos · Marketing · KPIs — Ene 2024 a Dic 2026</p>
+<p class="sub">EERR · Ventas · RRHH · Gastos · Marketing · KPIs — Datos reales ene 2024 a mar 2025</p>
 
 <nav class="nav">
-<a href="#m1">1·EERR</a><a href="#m2">2·Flujo Caja</a><a href="#m3">3·Ventas</a><a href="#m4">4·Detalle Ventas</a><a href="#m5">5·RRHH</a><a href="#m6">6·Gastos Adm/Op</a><a href="#m7">7·Gs No Op + Mkt</a><a href="#m8">8·Conclusiones</a>
+<a href="#m1">1·EERR</a><a href="#m2">2·Ventas</a><a href="#m3">3·Detalle Ventas</a><a href="#m4">4·RRHH</a><a href="#m5">5·Gastos Adm/Op</a><a href="#m6">6·Gs No Op + Mkt</a><a href="#m7">7·Conclusiones</a>
 </nav>
 
 <!-- === M1: EERR === -->
@@ -78,7 +78,7 @@ tr:hover td{background:var(--s2)}
 <div class="c" style="margin-bottom:16px">
 <h3>Detalle por Sucursal — <span id="eerr-periodo2"></span> (millones CLP)</h3>
 <table>
-<tr><th>Sucursal</th><th>Ingresos</th><th>Gs Personal</th><th>Gs Adm</th><th>Gs Op</th><th>Gs NoOp</th><th>Resultado</th><th>Margen</th><th>Cumpl.</th></tr>
+<tr><th>Sucursal</th><th>Ingresos</th><th>Gs Personal</th><th>Gs Adm</th><th>Gs Op</th><th>Gs NoOp</th><th>Resultado</th><th>Margen</th><th>vs 2024</th></tr>
 <tbody id="tbody-eerr"></tbody>
 </table></div>
 <div id="ib-eerr"></div>
@@ -86,28 +86,15 @@ tr:hover td{background:var(--s2)}
 
 <div class="dv"></div>
 
-<!-- === M2: FLUJO === -->
-<section class="sec" id="m2">
-<h2>Módulo 2 · Flujo de Caja Proyectado 2026</h2>
-<div class="g4" id="kpi-flujo"></div>
-<div class="c" style="margin-bottom:16px"><h3>Flujo Mensual y Acumulado 2026</h3><div class="cw cw-t"><canvas id="c3"></canvas></div></div>
-<div class="g2">
-<div class="c"><h3>Composición Egresos Mensuales (M CLP)</h3><div class="cw"><canvas id="c4"></canvas></div></div>
-<div class="c"><h3>Utilidad Neta Mensual</h3><div class="cw"><canvas id="c5"></canvas></div></div>
-</div>
-<div id="ib-flujo"></div>
-</section>
-
-<div class="dv"></div>
 
 <!-- === M3: VENTAS === -->
-<section class="sec" id="m3">
-<h2>Módulo 3 · Ventas Consolidadas 2024–2026</h2>
+<section class="sec" id="m2">
+<h2>Módulo 2 · Ventas Consolidadas 2024–2025</h2>
 <div class="g4" id="kpi-ventas"></div>
 <div class="c" style="margin-bottom:16px"><h3>Evolución de Ventas Mensuales</h3><div class="cw cw-t"><canvas id="c6"></canvas></div></div>
 <div class="g2">
 <div class="c"><h3>Ventas Anuales por Sucursal</h3><div class="cw cw-t"><canvas id="c7"></canvas></div></div>
-<div class="c"><h3>Participación Interna 2026</h3><div class="cw cw-t"><canvas id="c8"></canvas></div></div>
+<div class="c"><h3>Participación Interna 2025</h3><div class="cw cw-t"><canvas id="c8"></canvas></div></div>
 </div>
 <div id="ib-ventas"></div>
 </section>
@@ -115,8 +102,8 @@ tr:hover td{background:var(--s2)}
 <div class="dv"></div>
 
 <!-- === M4: VENTAS DETALLE === -->
-<section class="sec" id="m4">
-<h2>Módulo 4 · Detalle de Ventas — <span id="tx-count"></span> Transacciones</h2>
+<section class="sec" id="m3">
+<h2>Módulo 3 · Detalle de Ventas — <span id="tx-count"></span> Transacciones</h2>
 <div class="g4" id="kpi-detalle"></div>
 <div class="g2">
 <div class="c"><h3>Top Tratamientos por Facturación</h3><div class="cw cw-t"><canvas id="c9"></canvas></div></div>
@@ -132,12 +119,12 @@ tr:hover td{background:var(--s2)}
 <div class="dv"></div>
 
 <!-- === M5: RRHH === -->
-<section class="sec" id="m5">
-<h2>Módulo 5 · Gastos de Personal (RRHH)</h2>
+<section class="sec" id="m4">
+<h2>Módulo 4 · Gastos de Personal (RRHH)</h2>
 <div class="g4" id="kpi-rrhh"></div>
 <div class="g2">
-<div class="c"><h3>Evolución Mensual RRHH (2025 vs 2026)</h3><div class="cw"><canvas id="c13"></canvas></div></div>
-<div class="c"><h3>RRHH como % de Ventas por Sucursal (2026)</h3><div class="cw"><canvas id="c14"></canvas></div></div>
+<div class="c"><h3>Evolución Mensual RRHH 2025</h3><div class="cw"><canvas id="c13"></canvas></div></div>
+<div class="c"><h3>RRHH como % de Ventas por Sucursal (2025)</h3><div class="cw"><canvas id="c14"></canvas></div></div>
 </div>
 <div class="c" style="margin-bottom:16px"><h3>Composición del Gasto de Personal</h3><div class="cw cw-s"><canvas id="c15"></canvas></div></div>
 <div class="c" style="margin-bottom:16px"><h3>Detalle Composición Personal (acumulado)</h3>
@@ -148,8 +135,8 @@ tr:hover td{background:var(--s2)}
 <div class="dv"></div>
 
 <!-- === M6: GS ADM + OP === -->
-<section class="sec" id="m6">
-<h2>Módulo 6 · Gastos Administrativos y Operativos</h2>
+<section class="sec" id="m5">
+<h2>Módulo 5 · Gastos Administrativos y Operativos</h2>
 <div class="g2">
 <div class="c"><h3>Gastos Administrativos por Tipo</h3><div class="cw"><canvas id="c16"></canvas></div></div>
 <div class="c"><h3>Gastos Operativos por Tipo</h3><div class="cw"><canvas id="c17"></canvas></div></div>
@@ -181,8 +168,8 @@ tr:hover td{background:var(--s2)}
 <div class="dv"></div>
 
 <!-- === M7: GS NO OP + MKT === -->
-<section class="sec" id="m7">
-<h2>Módulo 7 · Gastos No Operacionales + Marketing</h2>
+<section class="sec" id="m6">
+<h2>Módulo 6 · Gastos No Operacionales + Marketing</h2>
 <div class="g4" id="kpi-nop"></div>
 <div class="g2">
 <div class="c"><h3>Distribución Gs No Operacionales (total acumulado)</h3><div class="cw cw-t"><canvas id="c18"></canvas></div></div>
@@ -197,8 +184,8 @@ tr:hover td{background:var(--s2)}
 <div class="dv"></div>
 
 <!-- === M8: CONCLUSIONES === -->
-<section class="sec" id="m8">
-<h2>Módulo 8 · Conclusiones y Plan de Acción</h2>
+<section class="sec" id="m7">
+<h2>Módulo 7 · Conclusiones y Plan de Acción</h2>
 <div class="g3">
 <div class="c" style="border-left:3px solid var(--rd)" id="col-alertas"></div>
 <div class="c" style="border-left:3px solid var(--gn)" id="col-ok"></div>
@@ -214,7 +201,7 @@ tr:hover td{background:var(--s2)}
 </div><!-- /ctn -->
 
 <script>
-const D = {"eerr":{"anio":2026,"mes":"Ene","sucursales":[{"nombre":"TOTAL","ingresos":617922850.0,"ingresos_ppto":611230400.0,"cumpl":101.1,"gs_personal":250536877.0,"gs_admin":46008341.0,"gs_op":25971003.0,"gs_nop":100221073.0,"resultado":195185556.0,"margen_pct":31.6},{"nombre":"NCA Guardia Vieja","ingresos":125612950.0,"ingresos_ppto":148198624.0,"cumpl":84.8,"gs_personal":37368124.0,"gs_admin":3899450.0,"gs_op":1345652.0,"gs_nop":939302.0,"resultado":82060422.0,"margen_pct":65.3},{"nombre":"NCA Camino el Alba","ingresos":166713305.0,"ingresos_ppto":74640976.0,"cumpl":223.4,"gs_personal":14912577.0,"gs_admin":229990.0,"gs_op":1687303.0,"gs_nop":1116612.0,"resultado":148766823.0,"margen_pct":89.2},{"nombre":"NCA Cerro El Plomo","ingresos":60414190.0,"ingresos_ppto":80512752.0,"cumpl":75.0,"gs_personal":18754196.0,"gs_admin":5460040.0,"gs_op":556672.0,"gs_nop":1534302.0,"resultado":34108980.0,"margen_pct":56.5},{"nombre":"NCA Encomenderos","ingresos":78596970.0,"ingresos_ppto":86551376.0,"cumpl":90.8,"gs_personal":21087168.0,"gs_admin":73048.0,"gs_op":10789056.0,"gs_nop":1355802.0,"resultado":45291896.0,"margen_pct":57.6},{"nombre":"NCA Estoril","ingresos":48203935.0,"ingresos_ppto":80512752.0,"cumpl":59.9,"gs_personal":16676592.0,"gs_admin":0.0,"gs_op":562344.0,"gs_nop":939302.0,"resultado":30025697.0,"margen_pct":62.3},{"nombre":"NCA Vitacura","ingresos":138381500.0,"ingresos_ppto":140813920.0,"cumpl":98.3,"gs_personal":42000000.0,"gs_admin":2173817.0,"gs_op":7742082.0,"gs_nop":13651092.0,"resultado":72814509.0,"margen_pct":52.6},{"nombre":"Casa Matriz","ingresos":0.0,"ingresos_ppto":0.0,"cumpl":0.0,"gs_personal":99738220.0,"gs_admin":34171996.0,"gs_op":3287894.0,"gs_nop":80684661.0,"resultado":-217882771.0,"margen_pct":0.0}]},"flujo":{"labels":["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"],"ingresos":[617922850.0,523442210.0,545819547.0,458217180.0,553119646.0,513100947.0,520760843.0,555531375.0,560733196.0,670670020.0,650939793.0,539305453.0],"gs_rrhh":[250536877.0,264259892.0,422297497.0,421698299.0,447020305.0,429874166.0,420156470.0,438635933.0,427149932.0,427149932.0,427149932.0,427149932.0],"gs_adm_op":[46008341.0,57366755.0,5373561.0,4834990.0,4834990.0,9121555.0,4394990.0,4394990.0,4394990.0,4394990.0,4394990.0,4394990.0],"gs_nop":[118365891.0,47357157.0,28057646.0,28057646.0,28057646.0,28057646.0,28057646.0,15278760.0,11765000.0,11765000.0,11765000.0,19124449.0],"flujo_caja":[61512130.0,47499071.0,-13842284.0,-96618914.0,-48866021.0,-66066184.0,-46478465.0,-27446058.0,-9001916.0,75649439.0,60457164.0,-31685689.0],"flujo_acum":[61512130.0,109011201.0,95168917.0,-1449997.0,-50316019.0,-116382203.0,-162860667.0,-190306726.0,-199308641.0,-123659202.0,-63202038.0,-94887727.0],"utilidad_neta":[83512130.0,47499071.0,-13842284.0,-96618914.0,-48866021.0,-66066184.0,-46478465.0,-27446058.0,-9001916.0,75649439.0,60457164.0,-31685689.0],"saldo_inicial":160000000.0,"ppm_pct":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"ppm_val":[6179228.0,5234422.0,5458195.0,18328687.0,22124786.0,20524038.0,20830434.0,22221255.0,22429328.0,26826801.0,26037592.0,21572218.0]},"ventas":{"labels":["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"],"v2024":[592777307.0,601875859.0,521191668.0,456839448.0,531757844.0,474879454.0,560969611.0,567634215.0,539395682.0,719093550.0,751164915.0,600572929.0],"v2025":[610543511.0,532392080.0,468545320.0,364352202.0,502869294.0,542374890.0,482907236.0,541672862.0,552012340.0,662439588.0,647734708.0,517936772.0],"v2026":[617922850.0,523442210.0,545819547.0,458217180.0,553119646.0,513100947.0,520760843.0,555531375.0,560733196.0,670670020.0,650939793.0,539305453.0],"total_2024":6918152482.0,"total_2025":6425780803.0,"total_2026":6709563060.0,"ticket_2024":[302130.0,266199.0,262830.0,239434.0,253339.0,274814.0,256034.0,278936.0,284792.0,293388.0,272161.0,272740.0],"ticket_2025":[299139.0,271213.0,236815.0,211586.0,199507.0,227125.0,201790.0,217027.0,233763.0,232953.0,232759.0,227654.0],"trans_2024":[1961,2261,1983,1908,2099,1728,2191,2035,1894,2451,2760,2202],"trans_2025":[2041,1963,1979,1722,2207,2388,2420,2310,2299,3076,2587,2454],"top_trat":[{"nombre":"Onda Coolwaves","sesiones":10963,"ingresos":2507480782.0,"ticket":228722.0},{"nombre":"Maximus","sesiones":7193,"ingresos":2414775409.0,"ticket":335712.0},{"nombre":"Hifu","sesiones":10054,"ingresos":1641576539.0,"ticket":163276.0},{"nombre":"Exilis","sesiones":4759,"ingresos":1594421707.0,"ticket":335033.0},{"nombre":"LIPO TI","sesiones":4495,"ingresos":1375826390.0,"ticket":306079.0},{"nombre":"Exion","sesiones":1640,"ingresos":889300784.0,"ticket":542257.0},{"nombre":"Embody","sesiones":2120,"ingresos":848188710.0,"ticket":400089.0},{"nombre":"Cocoon Wellness Pro","sesiones":979,"ingresos":416434790.0,"ticket":425368.0},{"nombre":"AGAIN","sesiones":1556,"ingresos":278711634.0,"ticket":179121.0},{"nombre":"Emtone","sesiones":348,"ingresos":256148000.0,"ticket":736057.0}],"ticket_suc":[{"suc":"NCA Camino el Alba","ticket":266975.0},{"suc":"NCA Cerro El Plomo","ticket":233759.0},{"suc":"NCA Encomenderos","ticket":223079.0},{"suc":"NCA Estoril","ticket":260621.0},{"suc":"NCA Face & Body","ticket":297447.0},{"suc":"NCA Guardia Vieja","ticket":228703.0},{"suc":"NCA Therapy","ticket":291734.0}],"tipo_prod":[{"tipo":"Servicio","venta":12990784038.0},{"tipo":"Producto","venta":289198116.0}],"suc_totals":[{"suc":"NCA Guardia Vieja","v26":1682458138.0},{"suc":"NCA Camino el Alba","v26":971713305.0},{"suc":"NCA Encomenderos","v26":868596970.0},{"suc":"NCA Face & Body","v26":838436196.0},{"suc":"NCA Therapy","v26":815891966.0},{"suc":"NCA Estoril","v26":777052295.0},{"suc":"NCA Cerro El Plomo","v26":755414190.0}],"suc_data":{"NCA Camino el Alba":{"2024":1031271129.0,"2025":683682812.0,"2026":971713305.0},"NCA Cerro El Plomo":{"2024":808764106.0,"2025":760890278.0,"2026":755414190.0},"NCA Encomenderos":{"2024":946757629.0,"2025":824137937.0,"2026":868596970.0},"NCA Estoril":{"2024":795903381.0,"2025":775223576.0,"2026":777052295.0},"NCA Face & Body":{"2024":1422484469.0,"2025":896610619.0,"2026":838436196.0},"NCA Guardia Vieja":{"2024":1714315268.0,"2025":1677374736.0,"2026":1682458138.0},"NCA Therapy":{"2024":198656500.0,"2025":807860845.0,"2026":815891966.0}},"total_txns":52919},"rrhh":{"labels":["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"],"r2025":[239388570.0,244303448.0,229122493.0,225928479.0,267924268.0,235405494.0,223667747.0,253816945.0,238110740.0,255083445.0,264860704.0,228322524.0],"r2026":[250536877.0,264259892.0,422297497.0,421698299.0,447020305.0,429874166.0,420156470.0,438635933.0,427149932.0,427149932.0,427149932.0,427149932.0],"total_2025":2905934857.0,"total_2026":4803079167.0,"tipo_gasto":[{"tipo":"Remuneraciones","importe":3308197041.0},{"tipo":"Bonos","importe":3177119584.0},{"tipo":"Imposiciones","importe":1223697399.0}],"ratio_suc":[{"suc":"Face & Body","rrhh":299012433.0,"venta":896610619.0,"ratio":33.3},{"suc":"Therapy","rrhh":262193122.0,"venta":807860845.0,"ratio":32.5},{"suc":"Encomenderos","rrhh":254149784.0,"venta":824137937.0,"ratio":30.8},{"suc":"Guardia Vieja","rrhh":515779898.0,"venta":1677374736.0,"ratio":30.7},{"suc":"Camino el Alba","rrhh":200754091.0,"venta":683682812.0,"ratio":29.4},{"suc":"Cerro El Plomo","rrhh":216503084.0,"venta":760890278.0,"ratio":28.5},{"suc":"Estoril","rrhh":219676167.0,"venta":775223576.0,"ratio":28.3}]},"adm_op":{"adm_tipo":[{"tipo":"Arriendo","monto":307627875.0},{"tipo":"Retiro socios","monto":278684908.0},{"tipo":"Leasing Maquinas","monto":146261500.0},{"tipo":"Finiquitos","monto":144595178.0},{"tipo":"Otros gastos","monto":110893263.0},{"tipo":"Servicios contables","monto":95891011.0},{"tipo":"Servicios basicos","monto":47564056.0},{"tipo":"Gs Comunes (arriendos)","monto":42873042.0},{"tipo":"Abogado","monto":11117934.0}],"op_tipo":[{"tipo":"Consumibles por Venta de Servicios","monto":340220607.0},{"tipo":"Repuestos de Maquinas","monto":62347576.0},{"tipo":"Gastos  en Software (ERP y RRHH)","monto":53483119.0},{"tipo":"Otros gastos operativos","monto":48813308.0},{"tipo":"Mantención de máquinas","monto":37256529.0},{"tipo":"Ss Lavandería","monto":16328324.0},{"tipo":"Artículos de aseo","monto":12525017.0}],"adm_total":1185508767.0,"op_total":570974480.0},"no_op":{"tipo":[{"tipo":"Inversión digital","monto":712152646.0},{"tipo":"Gs Financieros - Bancos","monto":564380848.0},{"tipo":"Gs Financieros - TGR","monto":298478880.0},{"tipo":"Gs Financieros","monto":206077901.0},{"tipo":"Asesorías, Honorarios y Consultorías","monto":148693656.0},{"tipo":"Soporte a sistemas TI","monto":139364983.0},{"tipo":"Gs Marketing y Publicidad","monto":107725670.0},{"tipo":"Ss Aseo","monto":87711300.0},{"tipo":"Otros gastos","monto":58439225.0},{"tipo":"Ss de Seguridad","monto":8663200.0},{"tipo":"Ss de Música ambiental","monto":7859957.0},{"tipo":"Ss Generales","monto":3481864.0},{"tipo":"Ss Jardinería","monto":654500.0}],"proveedores":[{"prov":"SERGIO CACERES","monto":511445401.0,"tipo":"Inversión Digital"},{"prov":"BANCO SANTANDER","monto":308314496.0,"tipo":"Financiero"},{"prov":"TESORERIA","monto":298478880.0,"tipo":"Deuda Fiscal"},{"prov":"ALTA COMUNICACIÓN","monto":270562824.0,"tipo":"Inversión Digital"},{"prov":"GRENKE","monto":169974369.0,"tipo":"Financiero"},{"prov":"BANCO SCOTIABANK","monto":132494191.0,"tipo":"Financiero"},{"prov":"BANCO ITAU","monto":123572161.0,"tipo":"Financiero"},{"prov":"KPB","monto":95373642.0,"tipo":"Soporte TI"},{"prov":"SERVICIOS PM SPA","monto":69972000.0,"tipo":"Servicios"},{"prov":"INV. LOS COPIHUES","monto":50805183.0,"tipo":"Asesorías"}],"total":2343684630.0,"total_2025":1314892377.0,"total_2026":631726167.0,"digital_2025":354437062.0,"digital_2026":62018097.0},"mkt":{"labels":["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sept","Oct","Nov","Dic"],"mkt_2024":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"mkt_2025":[4966526.0,1999600.0,400000.0,903854.0,7217000.0,7441480.0,640000.0,15124669.0,0.0,17074631.0,10242992.0,2258843.0],"mkt_2026":[39046986.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,409089.0],"total_2024":0.0,"total_2025":68269595.0,"total_2026":39456075.0,"roi_data":[{"mes":"Ene","v24":592777306.98,"m24":0.0,"roi24":null,"v25":610543511.0,"m25":4966526.0,"roi25":122.9,"v26":617922850.0,"m26":39046986.0,"roi26":15.8},{"mes":"Feb","v24":601875859.0,"m24":0.0,"roi24":null,"v25":532392080.0,"m25":1999600.0,"roi25":266.2,"v26":523442210.0,"m26":0.0,"roi26":null},{"mes":"Mar","v24":521191668.0,"m24":0.0,"roi24":null,"v25":468545320.0,"m25":400000.0,"roi25":1171.4,"v26":545819547.0,"m26":0.0,"roi26":null},{"mes":"Abr","v24":456839448.0,"m24":0.0,"roi24":null,"v25":364352202.0,"m25":903854.0,"roi25":403.1,"v26":458217180.0,"m26":0.0,"roi26":null},{"mes":"May","v24":531757844.0,"m24":0.0,"roi24":null,"v25":502869294.0,"m25":7217000.0,"roi25":69.7,"v26":553119646.0,"m26":0.0,"roi26":null},{"mes":"Jun","v24":474879454.02,"m24":0.0,"roi24":null,"v25":542374890.0,"m25":7441480.0,"roi25":72.9,"v26":513100947.0,"m26":0.0,"roi26":null},{"mes":"Jul","v24":560969611.0,"m24":0.0,"roi24":null,"v25":482907236.0,"m25":640000.0,"roi25":754.5,"v26":520760843.0,"m26":0.0,"roi26":null},{"mes":"Ago","v24":567634214.99,"m24":0.0,"roi24":null,"v25":541672862.0,"m25":15124669.0,"roi25":35.8,"v26":555531375.0,"m26":0.0,"roi26":null},{"mes":"Sept","v24":539395682.0,"m24":0.0,"roi24":null,"v25":552012340.0,"m25":0.0,"roi25":null,"v26":560733196.0,"m26":0.0,"roi26":null},{"mes":"Oct","v24":719093550.0,"m24":0.0,"roi24":null,"v25":662439588.0,"m25":17074631.0,"roi25":38.8,"v26":670670020.0,"m26":0.0,"roi26":null},{"mes":"Nov","v24":751164915.0,"m24":0.0,"roi24":null,"v25":647734708.0,"m25":10242992.0,"roi25":63.2,"v26":650939793.0,"m26":0.0,"roi26":null},{"mes":"Dic","v24":600572929.0,"m24":0.0,"roi24":null,"v25":517936772.0,"m25":2258843.0,"roi25":229.3,"v26":539305453.0,"m26":409089.0,"roi26":1318.3}]},"seg":{"por_sucursal":[{"suc":"Guardia Vieja","ingresos":5074148142.0,"rrhh":1621292435.0,"admin":169358395.0,"op":158680811.0,"no_op":515738430.0,"costos":2465070070.0,"margen":2609078072.0,"margen_pct":51.4},{"suc":"Face & Body","ingresos":3157531284.0,"rrhh":1045055345.0,"admin":169358395.0,"op":67271374.0,"no_op":337260169.0,"costos":1618945283.0,"margen":1538586001.0,"margen_pct":48.7},{"suc":"Camino el Alba","ingresos":2686667246.0,"rrhh":1033574276.0,"admin":169358395.0,"op":49128558.0,"no_op":314478371.0,"costos":1566539601.0,"margen":1120127645.0,"margen_pct":41.7},{"suc":"Encomenderos","ingresos":2639492536.0,"rrhh":1040859009.0,"admin":169358395.0,"op":65550033.0,"no_op":310116000.0,"costos":1585883437.0,"margen":1053609099.0,"margen_pct":39.9},{"suc":"Estoril","ingresos":2348179252.0,"rrhh":989593182.0,"admin":169358395.0,"op":62472193.0,"no_op":287263175.0,"costos":1508686945.0,"margen":839492307.0,"margen_pct":35.8},{"suc":"Cerro El Plomo","ingresos":2325068574.0,"rrhh":972035592.0,"admin":169358395.0,"op":67425127.0,"no_op":288872650.0,"costos":1497691765.0,"margen":827376809.0,"margen_pct":35.6},{"suc":"Therapy","ingresos":1822409311.0,"rrhh":1006604185.0,"admin":169358395.0,"op":52673474.0,"no_op":264378285.0,"costos":1493014339.0,"margen":329394972.0,"margen_pct":18.1}],"total_costos":11735831440.0,"total_margen":8317664905.0,"margen_pct_global":41.5},"kpis":{"var_ventas":4.4,"rrhh_ratio":71.6,"flujo_min":-199308641.0,"flujo_final":-94887727.0,"ticket_var":-14.3,"margen_op":31.6}};
+const D = {"eerr":{"anio":2025,"mes":"Anual","sucursales":[{"nombre":"Casa Matriz","ingresos":0.0,"ingresos_ppto":0.0,"cumpl":0.0,"gs_personal":937866278.0,"gs_admin":603313079.0,"gs_op":424703006.0,"gs_nop":1278066244.0,"resultado":-3243948607.0,"margen_pct":0.0},{"nombre":"NCA Camino el Alba","ingresos":683682812.0,"ingresos_ppto":1031271129.0,"cumpl":66.3,"gs_personal":200754091.0,"gs_admin":74719471.0,"gs_op":7942416.0,"gs_nop":7190704.0,"resultado":393076130.0,"margen_pct":57.5},{"nombre":"NCA Cerro El Plomo","ingresos":760890278.0,"ingresos_ppto":808764106.0,"cumpl":94.1,"gs_personal":216503084.0,"gs_admin":54939008.0,"gs_op":3573226.0,"gs_nop":3554621.0,"resultado":482320339.0,"margen_pct":63.4},{"nombre":"NCA Encomenderos","ingresos":824137937.0,"ingresos_ppto":946757629.0,"cumpl":87.0,"gs_personal":254149784.0,"gs_admin":36498092.0,"gs_op":3855815.0,"gs_nop":3758072.0,"resultado":525876174.0,"margen_pct":63.8},{"nombre":"NCA Estoril","ingresos":775223576.0,"ingresos_ppto":795903381.0,"cumpl":97.4,"gs_personal":219676167.0,"gs_admin":25338502.0,"gs_op":6991052.0,"gs_nop":3589250.0,"resultado":519628605.0,"margen_pct":67.0},{"nombre":"NCA Face & Body","ingresos":896610619.0,"ingresos_ppto":1422484469.0,"cumpl":63.0,"gs_personal":299012433.0,"gs_admin":50476583.0,"gs_op":16455394.0,"gs_nop":6273983.0,"resultado":524392226.0,"margen_pct":58.5},{"nombre":"NCA Guardia Vieja","ingresos":1677374736.0,"ingresos_ppto":1714315268.0,"cumpl":97.8,"gs_personal":515779898.0,"gs_admin":70267334.0,"gs_op":9165631.0,"gs_nop":3808388.0,"resultado":1078353485.0,"margen_pct":64.3},{"nombre":"NCA Rosario Norte","ingresos":0.0,"ingresos_ppto":0.0,"cumpl":0.0,"gs_personal":0.0,"gs_admin":32220022.0,"gs_op":0.0,"gs_nop":0.0,"resultado":-32220022.0,"margen_pct":0.0},{"nombre":"NCA Therapy","ingresos":807860845.0,"ingresos_ppto":198656500.0,"cumpl":406.7,"gs_personal":262193122.0,"gs_admin":80404987.0,"gs_op":43020258.0,"gs_nop":8651115.0,"resultado":413591363.0,"margen_pct":51.2},{"nombre":"NCA Vitacura (Therapy | Face&Body)","ingresos":0.0,"ingresos_ppto":0.0,"cumpl":0.0,"gs_personal":0.0,"gs_admin":3228511.0,"gs_op":7494773.0,"gs_nop":0.0,"resultado":-10723284.0,"margen_pct":0.0},{"nombre":"TOTAL","ingresos":6425780803.0,"ingresos_ppto":6918152482.0,"cumpl":92.9,"gs_personal":2905934857.0,"gs_admin":1031405589.0,"gs_op":523201571.0,"gs_nop":1314892377.0,"resultado":650346409.0,"margen_pct":10.1}]},"flujo":{"labels":["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"],"ingresos":[617922850.0,523442210.0,545819547.0,458217180.0,553119646.0,513100947.0,520760843.0,555531375.0,560733196.0,670670020.0,650939793.0,539305453.0],"gs_rrhh":[250536877.0,264259892.0,422297497.0,421698299.0,447020305.0,429874166.0,420156470.0,438635933.0,427149932.0,427149932.0,427149932.0,427149932.0],"gs_adm_op":[46008341.0,57366755.0,5373561.0,4834990.0,4834990.0,9121555.0,4394990.0,4394990.0,4394990.0,4394990.0,4394990.0,4394990.0],"gs_nop":[118365891.0,47357157.0,28057646.0,28057646.0,28057646.0,28057646.0,28057646.0,15278760.0,11765000.0,11765000.0,11765000.0,19124449.0],"flujo_caja":[61512130.0,47499071.0,-13842284.0,-96618914.0,-48866021.0,-66066184.0,-46478465.0,-27446058.0,-9001916.0,75649439.0,60457164.0,-31685689.0],"flujo_acum":[61512130.0,109011201.0,95168917.0,-1449997.0,-50316019.0,-116382203.0,-162860667.0,-190306726.0,-199308641.0,-123659202.0,-63202038.0,-94887727.0],"utilidad_neta":[83512130.0,47499071.0,-13842284.0,-96618914.0,-48866021.0,-66066184.0,-46478465.0,-27446058.0,-9001916.0,75649439.0,60457164.0,-31685689.0],"saldo_inicial":160000000.0,"ppm_pct":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"ppm_val":[6179228.0,5234422.0,5458195.0,18328687.0,22124786.0,20524038.0,20830434.0,22221255.0,22429328.0,26826801.0,26037592.0,21572218.0]},"ventas":{"labels":["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"],"v2024":[592777307.0,601875859.0,521191668.0,456839448.0,531757844.0,474879454.0,560969611.0,567634215.0,539395682.0,719093550.0,751164915.0,600572929.0],"v2025":[610543511.0,532392080.0,468545320.0,364352202.0,502869294.0,542374890.0,482907236.0,541672862.0,552012340.0,662439588.0,647734708.0,517936772.0],"v2026":[617922850.0,523442210.0,545819547.0,458217180.0,553119646.0,513100947.0,520760843.0,555531375.0,560733196.0,670670020.0,650939793.0,539305453.0],"total_2024":6918152482.0,"total_2025":6425780803.0,"total_2026":6709563060.0,"ticket_2024":[302130.0,266199.0,262830.0,239434.0,253339.0,274814.0,256034.0,278936.0,284792.0,293388.0,272161.0,272740.0],"ticket_2025":[299139.0,271213.0,236815.0,211586.0,199507.0,227125.0,201790.0,217027.0,233763.0,232953.0,232759.0,227654.0],"trans_2024":[1961,2261,1983,1908,2099,1728,2191,2035,1894,2451,2760,2202],"trans_2025":[2041,1963,1979,1722,2207,2388,2420,2310,2299,3076,2587,2454],"top_trat":[{"nombre":"Onda Coolwaves","sesiones":10963,"ingresos":2507480782.0,"ticket":228722.0},{"nombre":"Maximus","sesiones":7193,"ingresos":2414775409.0,"ticket":335712.0},{"nombre":"Hifu","sesiones":10054,"ingresos":1641576539.0,"ticket":163276.0},{"nombre":"Exilis","sesiones":4759,"ingresos":1594421707.0,"ticket":335033.0},{"nombre":"LIPO TI","sesiones":4495,"ingresos":1375826390.0,"ticket":306079.0},{"nombre":"Exion","sesiones":1640,"ingresos":889300784.0,"ticket":542257.0},{"nombre":"Embody","sesiones":2120,"ingresos":848188710.0,"ticket":400089.0},{"nombre":"Cocoon Wellness Pro","sesiones":979,"ingresos":416434790.0,"ticket":425368.0},{"nombre":"AGAIN","sesiones":1556,"ingresos":278711634.0,"ticket":179121.0},{"nombre":"Emtone","sesiones":348,"ingresos":256148000.0,"ticket":736057.0}],"ticket_suc":[{"suc":"NCA Camino el Alba","ticket":266975.0},{"suc":"NCA Cerro El Plomo","ticket":233759.0},{"suc":"NCA Encomenderos","ticket":223079.0},{"suc":"NCA Estoril","ticket":260621.0},{"suc":"NCA Face & Body","ticket":297447.0},{"suc":"NCA Guardia Vieja","ticket":228703.0},{"suc":"NCA Therapy","ticket":291734.0}],"tipo_prod":[{"tipo":"Servicio","venta":12990784038.0},{"tipo":"Producto","venta":289198116.0}],"suc_totals":[{"suc":"NCA Guardia Vieja","v25":1677374736.0},{"suc":"NCA Face & Body","v25":896610619.0},{"suc":"NCA Encomenderos","v25":824137937.0},{"suc":"NCA Therapy","v25":807860845.0},{"suc":"NCA Estoril","v25":775223576.0},{"suc":"NCA Cerro El Plomo","v25":760890278.0},{"suc":"NCA Camino el Alba","v25":683682812.0}],"suc_data":{"NCA Camino el Alba":{"2024":1031271129.0,"2025":683682812.0,"2026":971713305.0},"NCA Cerro El Plomo":{"2024":808764106.0,"2025":760890278.0,"2026":755414190.0},"NCA Encomenderos":{"2024":946757629.0,"2025":824137937.0,"2026":868596970.0},"NCA Estoril":{"2024":795903381.0,"2025":775223576.0,"2026":777052295.0},"NCA Face & Body":{"2024":1422484469.0,"2025":896610619.0,"2026":838436196.0},"NCA Guardia Vieja":{"2024":1714315268.0,"2025":1677374736.0,"2026":1682458138.0},"NCA Therapy":{"2024":198656500.0,"2025":807860845.0,"2026":815891966.0}},"total_txns":52919},"rrhh":{"labels":["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"],"r2025":[239388570.0,244303448.0,229122493.0,225928479.0,267924268.0,235405494.0,223667747.0,253816945.0,238110740.0,255083445.0,264860704.0,228322524.0],"r2026":[250536877.0,264259892.0,422297497.0,421698299.0,447020305.0,429874166.0,420156470.0,438635933.0,427149932.0,427149932.0,427149932.0,427149932.0],"total_2025":2905934857.0,"total_2026":4803079167.0,"tipo_gasto":[{"tipo":"Remuneraciones","importe":3308197041.0},{"tipo":"Bonos","importe":3177119584.0},{"tipo":"Imposiciones","importe":1223697399.0}],"ratio_suc":[{"suc":"Face & Body","rrhh":299012433.0,"venta":896610619.0,"ratio":33.3},{"suc":"Therapy","rrhh":262193122.0,"venta":807860845.0,"ratio":32.5},{"suc":"Encomenderos","rrhh":254149784.0,"venta":824137937.0,"ratio":30.8},{"suc":"Guardia Vieja","rrhh":515779898.0,"venta":1677374736.0,"ratio":30.7},{"suc":"Camino el Alba","rrhh":200754091.0,"venta":683682812.0,"ratio":29.4},{"suc":"Cerro El Plomo","rrhh":216503084.0,"venta":760890278.0,"ratio":28.5},{"suc":"Estoril","rrhh":219676167.0,"venta":775223576.0,"ratio":28.3}]},"adm_op":{"adm_tipo":[{"tipo":"Arriendo","monto":307627875.0},{"tipo":"Retiro socios","monto":278684908.0},{"tipo":"Leasing Maquinas","monto":146261500.0},{"tipo":"Finiquitos","monto":144595178.0},{"tipo":"Otros gastos","monto":110893263.0},{"tipo":"Servicios contables","monto":95891011.0},{"tipo":"Servicios basicos","monto":47564056.0},{"tipo":"Gs Comunes (arriendos)","monto":42873042.0},{"tipo":"Abogado","monto":11117934.0}],"op_tipo":[{"tipo":"Consumibles por Venta de Servicios","monto":340220607.0},{"tipo":"Repuestos de Maquinas","monto":62347576.0},{"tipo":"Gastos  en Software (ERP y RRHH)","monto":53483119.0},{"tipo":"Otros gastos operativos","monto":48813308.0},{"tipo":"Mantención de máquinas","monto":37256529.0},{"tipo":"Ss Lavandería","monto":16328324.0},{"tipo":"Artículos de aseo","monto":12525017.0}],"adm_total":1185508767.0,"op_total":570974480.0},"no_op":{"tipo":[{"tipo":"Inversión digital","monto":712152646.0},{"tipo":"Gs Financieros - Bancos","monto":564380848.0},{"tipo":"Gs Financieros - TGR","monto":298478880.0},{"tipo":"Gs Financieros","monto":206077901.0},{"tipo":"Asesorías, Honorarios y Consultorías","monto":148693656.0},{"tipo":"Soporte a sistemas TI","monto":139364983.0},{"tipo":"Gs Marketing y Publicidad","monto":107725670.0},{"tipo":"Ss Aseo","monto":87711300.0},{"tipo":"Otros gastos","monto":58439225.0},{"tipo":"Ss de Seguridad","monto":8663200.0},{"tipo":"Ss de Música ambiental","monto":7859957.0},{"tipo":"Ss Generales","monto":3481864.0},{"tipo":"Ss Jardinería","monto":654500.0}],"proveedores":[{"prov":"SERGIO CACERES","monto":511445401.0,"tipo":"Inversión Digital"},{"prov":"BANCO SANTANDER","monto":308314496.0,"tipo":"Financiero"},{"prov":"TESORERIA","monto":298478880.0,"tipo":"Deuda Fiscal"},{"prov":"ALTA COMUNICACIÓN","monto":270562824.0,"tipo":"Inversión Digital"},{"prov":"GRENKE","monto":169974369.0,"tipo":"Financiero"},{"prov":"BANCO SCOTIABANK","monto":132494191.0,"tipo":"Financiero"},{"prov":"BANCO ITAU","monto":123572161.0,"tipo":"Financiero"},{"prov":"KPB","monto":95373642.0,"tipo":"Soporte TI"},{"prov":"SERVICIOS PM SPA","monto":69972000.0,"tipo":"Servicios"},{"prov":"INV. LOS COPIHUES","monto":50805183.0,"tipo":"Asesorías"}],"total":2343684630.0,"total_2025":1314892377.0,"total_2026":631726167.0,"digital_2025":354437062.0,"digital_2026":62018097.0},"mkt":{"labels":["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sept","Oct","Nov","Dic","Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sept","Oct","Nov","Dic"],"mkt_2024":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"mkt_2025":[4966526.0,1999600.0,400000.0,903854.0,7217000.0,7441480.0,640000.0,15124669.0,0.0,17074631.0,10242992.0,2258843.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"mkt_2026":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"total_2024":0.0,"total_2025":68269595.0,"total_2026":0.0,"roi_data":[{"mes":"Ene","v24":592777306.98,"m24":0.0,"roi24":null,"v25":610543511.0,"m25":4966526.0,"roi25":122.9,"v26":592777306.98,"m26":0.0,"roi26":null},{"mes":"Feb","v24":601875859.0,"m24":0.0,"roi24":null,"v25":532392080.0,"m25":1999600.0,"roi25":266.2,"v26":601875859.0,"m26":0.0,"roi26":null},{"mes":"Mar","v24":521191668.0,"m24":0.0,"roi24":null,"v25":468545320.0,"m25":400000.0,"roi25":1171.4,"v26":521191668.0,"m26":0.0,"roi26":null},{"mes":"Abr","v24":456839448.0,"m24":0.0,"roi24":null,"v25":364352202.0,"m25":903854.0,"roi25":403.1,"v26":456839448.0,"m26":0.0,"roi26":null},{"mes":"May","v24":531757844.0,"m24":0.0,"roi24":null,"v25":502869294.0,"m25":7217000.0,"roi25":69.7,"v26":531757844.0,"m26":0.0,"roi26":null},{"mes":"Jun","v24":474879454.02,"m24":0.0,"roi24":null,"v25":542374890.0,"m25":7441480.0,"roi25":72.9,"v26":474879454.02,"m26":0.0,"roi26":null},{"mes":"Jul","v24":560969611.0,"m24":0.0,"roi24":null,"v25":482907236.0,"m25":640000.0,"roi25":754.5,"v26":560969611.0,"m26":0.0,"roi26":null},{"mes":"Ago","v24":567634214.99,"m24":0.0,"roi24":null,"v25":541672862.0,"m25":15124669.0,"roi25":35.8,"v26":567634214.99,"m26":0.0,"roi26":null},{"mes":"Sept","v24":539395682.0,"m24":0.0,"roi24":null,"v25":552012340.0,"m25":0.0,"roi25":null,"v26":539395682.0,"m26":0.0,"roi26":null},{"mes":"Oct","v24":719093550.0,"m24":0.0,"roi24":null,"v25":662439588.0,"m25":17074631.0,"roi25":38.8,"v26":719093550.0,"m26":0.0,"roi26":null},{"mes":"Nov","v24":751164915.0,"m24":0.0,"roi24":null,"v25":647734708.0,"m25":10242992.0,"roi25":63.2,"v26":751164915.0,"m26":0.0,"roi26":null},{"mes":"Dic","v24":600572929.0,"m24":0.0,"roi24":null,"v25":517936772.0,"m25":2258843.0,"roi25":229.3,"v26":600572929.0,"m26":0.0,"roi26":null},{"mes":"Ene","v24":610543511.0,"m24":0.0,"roi24":null,"v25":4966526.0,"m25":0.0,"roi25":null,"v26":610543511.0,"m26":0.0,"roi26":null},{"mes":"Feb","v24":532392080.0,"m24":0.0,"roi24":null,"v25":1999600.0,"m25":0.0,"roi25":null,"v26":532392080.0,"m26":0.0,"roi26":null},{"mes":"Mar","v24":468545320.0,"m24":0.0,"roi24":null,"v25":400000.0,"m25":0.0,"roi25":null,"v26":468545320.0,"m26":0.0,"roi26":null},{"mes":"Abr","v24":364352202.0,"m24":0.0,"roi24":null,"v25":903854.0,"m25":0.0,"roi25":null,"v26":364352202.0,"m26":0.0,"roi26":null},{"mes":"May","v24":502869294.0,"m24":0.0,"roi24":null,"v25":7217000.0,"m25":0.0,"roi25":null,"v26":502869294.0,"m26":0.0,"roi26":null},{"mes":"Jun","v24":542374890.0,"m24":0.0,"roi24":null,"v25":7441480.0,"m25":0.0,"roi25":null,"v26":542374890.0,"m26":0.0,"roi26":null},{"mes":"Jul","v24":482907236.0,"m24":0.0,"roi24":null,"v25":640000.0,"m25":0.0,"roi25":null,"v26":482907236.0,"m26":0.0,"roi26":null},{"mes":"Ago","v24":541672862.0,"m24":0.0,"roi24":null,"v25":15124669.0,"m25":0.0,"roi25":null,"v26":541672862.0,"m26":0.0,"roi26":null},{"mes":"Sept","v24":552012340.0,"m24":0.0,"roi24":null,"v25":0.0,"m25":0.0,"roi25":null,"v26":552012340.0,"m26":0.0,"roi26":null},{"mes":"Oct","v24":662439588.0,"m24":0.0,"roi24":null,"v25":17074631.0,"m25":0.0,"roi25":null,"v26":662439588.0,"m26":0.0,"roi26":null},{"mes":"Nov","v24":647734708.0,"m24":0.0,"roi24":null,"v25":10242992.0,"m25":0.0,"roi25":null,"v26":647734708.0,"m26":0.0,"roi26":null},{"mes":"Dic","v24":517936772.0,"m24":0.0,"roi24":null,"v25":2258843.0,"m25":0.0,"roi25":null,"v26":517936772.0,"m26":0.0,"roi26":null}]},"seg":{"por_sucursal":[{"suc":"Guardia Vieja","ingresos":5074148142.0,"rrhh":1621292435.0,"admin":169358395.0,"op":158680811.0,"no_op":515738430.0,"costos":2465070070.0,"margen":2609078072.0,"margen_pct":51.4},{"suc":"Face & Body","ingresos":3157531284.0,"rrhh":1045055345.0,"admin":169358395.0,"op":67271374.0,"no_op":337260169.0,"costos":1618945283.0,"margen":1538586001.0,"margen_pct":48.7},{"suc":"Camino el Alba","ingresos":2686667246.0,"rrhh":1033574276.0,"admin":169358395.0,"op":49128558.0,"no_op":314478371.0,"costos":1566539601.0,"margen":1120127645.0,"margen_pct":41.7},{"suc":"Encomenderos","ingresos":2639492536.0,"rrhh":1040859009.0,"admin":169358395.0,"op":65550033.0,"no_op":310116000.0,"costos":1585883437.0,"margen":1053609099.0,"margen_pct":39.9},{"suc":"Estoril","ingresos":2348179252.0,"rrhh":989593182.0,"admin":169358395.0,"op":62472193.0,"no_op":287263175.0,"costos":1508686945.0,"margen":839492307.0,"margen_pct":35.8},{"suc":"Cerro El Plomo","ingresos":2325068574.0,"rrhh":972035592.0,"admin":169358395.0,"op":67425127.0,"no_op":288872650.0,"costos":1497691765.0,"margen":827376809.0,"margen_pct":35.6},{"suc":"Therapy","ingresos":1822409311.0,"rrhh":1006604185.0,"admin":169358395.0,"op":52673474.0,"no_op":264378285.0,"costos":1493014339.0,"margen":329394972.0,"margen_pct":18.1}],"total_costos":11735831440.0,"total_margen":8317664905.0,"margen_pct_global":41.5},"kpis":{"var_ventas":-7.1,"rrhh_ratio":45.2,"flujo_min":-199308641.0,"flujo_final":-94887727.0,"ticket_var":-14.3,"margen_op":10.1}};
 
 // ── FORMAT HELPERS ────────────────────────────────────────────────────────
 const CLP = v => '$'+Math.round(v).toLocaleString('es-CL');
@@ -259,18 +246,18 @@ function buildEERR(){
   const totIng   = tot.ingresos||1;
   const totMg    = _jn(totRes/totIng*100);
   document.getElementById('kpi-eerr').innerHTML =
-    kpiCard('Ingresos Reales', MM(tot.ingresos||0), '', '') +
-    kpiCard('Cumplimiento Ppto', (totCumpl).toFixed(1)+'%', totCumpl>=100?'Supera meta global':'Bajo meta', totCumpl>=100?'dg':'dr') +
+    kpiCard('Ingresos 2025 Anual', MM(tot.ingresos||0), 'Año completo 12 meses', '') +
+    kpiCard('vs 2024', (totCumpl).toFixed(1)+'%', totCumpl>=100?'Creció vs 2024':'Cayó vs 2024', totCumpl>=100?'dg':'dr') +
     kpiCard('Resultado Operacional', MM(totRes), 'Margen '+totMg.toFixed(1)+'%', totRes>=0?'dg':'dr') +
-    kpiCard('Gastos Totales', MM((tot.gs_personal||0)+(tot.gs_admin||0)+(tot.gs_op||0)+(tot.gs_nop||0)), '', 'wn');
+    kpiCard('Gastos Totales 2025', MM((tot.gs_personal||0)+(tot.gs_admin||0)+(tot.gs_op||0)+(tot.gs_nop||0)), '', 'wn');
 
   // C1 cumplimiento (excluye Casa Matriz)
   const sucsC1 = sucs.filter(s=>s.nombre!=='Casa Matriz');
   const cumpl = sucsC1.map(s=>s.cumpl);
   mkChart('c1','bar',sucsC1.map(s=>s.nombre.replace('NCA ','')),
-    [{label:'Cumpl. %',data:cumpl,backgroundColor:cumpl.map(v=>v>=100?CL.g:v>=80?CL.a:CL.r),borderRadius:4}],
+    [{label:'Ventas 2025 vs 2024 %',data:cumpl,backgroundColor:cumpl.map(v=>v>=100?CL.g:v>=80?CL.a:CL.r),borderRadius:4}],
     {scales:{y:{beginAtZero:true,ticks:{callback:v=>v+'%'}}},plugins:{legend:{display:false},
-    tooltip:{callbacks:{label:c=>c.raw.toFixed(1)+'%'}}}});
+    tooltip:{callbacks:{label:c=>c.raw.toFixed(1)+'% vs 2024'}}}});
 
   // C2 resultado
   const res = sucs.map(s=>s.resultado/1e6);
@@ -310,12 +297,12 @@ function buildEERR(){
     const surplus=tot.ingresos-(tot.ingresos_ppto||tot.ingresos);
     if(totCumpl>=100){
       const bestPct=(best.ingresos_ppto&&best.ingresos_ppto>0)?(best.ingresos/best.ingresos_ppto*100).toFixed(0):null;
-      ibEl.innerHTML+=`<div class="ib ok"><b>🟢 Ingresos totales superan presupuesto (${surplus>0?'+':''}${MM(Math.abs(surplus))}, ${totCumpl.toFixed(1)}%)</b>A nivel consolidado, ${periodo} cumple la meta. ${best.nombre.replace('NCA ','')} sorprende con ${MM(best.ingresos)} vs ${MM(best.ingresos_ppto||best.ingresos)} presupuestados${bestPct?' ('+bestPct+'%), lo que sugiere un ajuste de ppto necesario o un evento puntual extraordinario':''}.</div>`;
+      ibEl.innerHTML+=`<div class="ib ok"><b>🟢 Ingresos 2025 superan 2024 (${surplus>0?'+':''}${MM(Math.abs(surplus))}, ${totCumpl.toFixed(1)}%)</b>A nivel consolidado, el año 2025 creció vs 2024. ${best.nombre.replace('NCA ','')} lideró con ${MM(best.ingresos)} vs ${MM(best.ingresos_ppto||best.ingresos)} en 2024${bestPct?' ('+bestPct+'%)':''}.</div>`;
     }
     if(lowSucs.length>=2)
-      ibEl.innerHTML+=`<div class="ib al"><b>🔴 ${lowSucs[0].nombre.replace('NCA ','')} (${lowSucs[0].cumpl.toFixed(1)}%) y ${lowSucs[1].nombre.replace('NCA ','')} (${lowSucs[1].cumpl.toFixed(1)}%) muy por debajo del presupuesto</b>${lowSucs[0].nombre.replace('NCA ','')} genera solo ${MM(lowSucs[0].ingresos)} de los ${MM(lowSucs[0].ingresos_ppto||0)} presupuestados. ${lowSucs[1].nombre.replace('NCA ','')} ${MM(lowSucs[1].ingresos)} de ${MM(lowSucs[1].ingresos_ppto||0)}. Estas dos sucursales necesitan plan de acción comercial urgente.</div>`;
+      ibEl.innerHTML+=`<div class="ib al"><b>🔴 ${lowSucs[0].nombre.replace('NCA ','')} (${lowSucs[0].cumpl.toFixed(1)}%) y ${lowSucs[1].nombre.replace('NCA ','')} (${lowSucs[1].cumpl.toFixed(1)}%) cayeron vs 2024</b>${lowSucs[0].nombre.replace('NCA ','')} generó ${MM(lowSucs[0].ingresos)} vs ${MM(lowSucs[0].ingresos_ppto||0)} en 2024. ${lowSucs[1].nombre.replace('NCA ','')} ${MM(lowSucs[1].ingresos)} vs ${MM(lowSucs[1].ingresos_ppto||0)}. Estas sucursales requieren plan de acción comercial.</div>`;
     else if(lowSucs.length===1)
-      ibEl.innerHTML+=`<div class="ib al"><b>🔴 ${lowSucs[0].nombre.replace('NCA ','')} (${lowSucs[0].cumpl.toFixed(1)}%) muy por debajo del presupuesto</b>Genera solo ${MM(lowSucs[0].ingresos)} de los ${MM(lowSucs[0].ingresos_ppto||0)} presupuestados. Necesita plan de acción comercial urgente.</div>`;
+      ibEl.innerHTML+=`<div class="ib al"><b>🔴 ${lowSucs[0].nombre.replace('NCA ','')} (${lowSucs[0].cumpl.toFixed(1)}%) cayó vs 2024</b>Generó ${MM(lowSucs[0].ingresos)} vs ${MM(lowSucs[0].ingresos_ppto||0)} en 2024. Requiere plan de acción comercial.</div>`;
     const cm = sucs.find(s=>s.nombre==='Casa Matriz');
     const totalGs = sucs.reduce((s,r)=>s+((r.gs_personal||0)+(r.gs_admin||0)+(r.gs_op||0)+(r.gs_nop||0)),0)||1;
     if(cm && Math.abs(cm.resultado)>1e8){
@@ -377,10 +364,7 @@ function buildFlujo(){
   const primerNegMes=primerNegIdx>=0?fl.labels[primerNegIdx]:null;
   if(primerNegMes)
     ibFl.innerHTML+=`<div class="ib al"><b>🔴 CRÍTICO: Caja real negativa desde ~${primerNegMes} (${MM(fl.saldo_inicial)} inicial - ${MM(Math.abs(minAcum))} mínimo acumulado = ${MM(fl.saldo_inicial+minAcum)} en ${mesMin})</b>Con saldo inicial de ${MM(fl.saldo_inicial)}, la empresa se queda sin efectivo entre ${primerNegMes} y ${mesMin}. El piso de ${MM(minAcum)} en ${mesMin} requiere inyección de capital.</div>`;
-  const rr26=D.rrhh.r2026, rrEne=rr26[0]||0;
-  const rrPico=Math.max(...rr26), rrPicoIdx=rr26.indexOf(rrPico), rrPicoMes=fl.labels[rrPicoIdx]||'';
-  if(rrPico>rrEne*1.3)
-    ibFl.innerHTML+=`<div class="ib al"><b>🔴 RRHH salta de ${MM(rrEne)} (ene) a ${MM(rrPico)} (${rrPicoMes}) y se estabiliza ahí</b>Desde ${rrPicoMes}, RRHH consume entre 73-92% de los ingresos mensuales. Este nivel destruye la caja sistemáticamente.</div>`;
+  // RRHH 2026 excluido — datos reales solo hasta marzo 2026
   const ppmPct = fl.ppm_pct||[], ppmVal = fl.ppm_val||[];
   const ppmIni = ppmPct[0]||0, ppmMax = Math.max(...ppmPct.filter(v=>v>0))||0;
   const ppmJumpIdx = ppmPct.findIndex(v=>v>ppmIni+0.005);
@@ -398,7 +382,6 @@ function buildFlujo(){
 function buildVentas(){
   const v = D.ventas;
   const pct25 = ((v.total_2025-v.total_2024)/v.total_2024*100).toFixed(1);
-  const pct26 = ((v.total_2026-v.total_2025)/v.total_2025*100).toFixed(1);
   const tickAvg25 = v.ticket_2025.filter(t=>t>0).reduce((a,b)=>a+b,0)/(v.ticket_2025.filter(t=>t>0).length||1);
   const tickAvg24 = v.ticket_2024.filter(t=>t>0).reduce((a,b)=>a+b,0)/(v.ticket_2024.filter(t=>t>0).length||1);
   const tickVar   = ((tickAvg25-tickAvg24)/tickAvg24*100).toFixed(1);
@@ -406,14 +389,13 @@ function buildVentas(){
   document.getElementById('kpi-ventas').innerHTML =
     kpiCard('Venta 2024', MM(v.total_2024),'') +
     kpiCard('Venta 2025', MM(v.total_2025), PCT(parseFloat(pct25)), parseFloat(pct25)>=0?'dg':'dr') +
-    kpiCard('Venta Proy 2026', MM(v.total_2026), PCT(parseFloat(pct26)), parseFloat(pct26)>=0?'dg':'dr') +
-    kpiCard('Promedio Mensual 2026', MM(v.total_2026/12), PCT(parseFloat(tickVar)), parseFloat(tickVar)>=0?'dg':'dr');
+    kpiCard('Promedio Mensual 2025', MM(v.total_2025/12), '', '') +
+    kpiCard('Var. Ticket 2024→2025', PCT(parseFloat(tickVar)), '', parseFloat(tickVar)>=0?'dg':'dr');
 
   // C6 lineas 3 años
   mkChart('c6','line',v.labels,[
     {label:'2024',data:v.v2024,borderColor:CL.p,borderWidth:2,pointRadius:2,fill:false,tension:.3},
     {label:'2025',data:v.v2025,borderColor:CL.a,borderWidth:2,pointRadius:2,fill:false,tension:.3},
-    {label:'2026 (Proy.)',data:v.v2026,borderColor:CL.b,borderWidth:2,pointRadius:2,fill:false,tension:.3,borderDash:[4,4]}
   ],{scales:{y:{ticks:{callback:v=>MM(v)}}}});
 
   // C7 barras por sucursal — suc_data keys son strings en JSON
@@ -421,13 +403,12 @@ function buildVentas(){
   mkChart('c7','bar',sucs,[
     {label:'2024',data:v.suc_totals.map(s=>v.suc_data?.[s.suc]?.['2024']||0),backgroundColor:'rgba(167,139,250,.6)',borderRadius:3},
     {label:'2025',data:v.suc_totals.map(s=>v.suc_data?.[s.suc]?.['2025']||0),backgroundColor:'rgba(245,158,11,.6)',borderRadius:3},
-    {label:'2026',data:v.suc_totals.map(s=>s.v26),backgroundColor:'rgba(56,189,248,.6)',borderRadius:3}
   ],{scales:{y:{ticks:{callback:v=>MM(v)}}}});
 
-  // C8 donut participacion 2026
+  // C8 donut participacion 2025
   new Chart(document.getElementById('c8'),{type:'doughnut',data:{
     labels:v.suc_totals.map(s=>s.suc.replace('NCA ','')),
-    datasets:[{data:v.suc_totals.map(s=>s.v26),backgroundColor:v.suc_totals.map((_,i)=>PALETTE[i%PALETTE.length]),borderWidth:0}]
+    datasets:[{data:v.suc_totals.map(s=>v.suc_data?.[s.suc]?.['2025']||0),backgroundColor:v.suc_totals.map((_,i)=>PALETTE[i%PALETTE.length]),borderWidth:0}]
   },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{boxWidth:10}},tooltip:{callbacks:{label:c=>c.label+': '+MM(c.raw)}}  }}});
 
   // C11 transacciones
@@ -445,14 +426,14 @@ function buildVentas(){
   // Info boxes
   const ibV = document.getElementById('ib-ventas');
   if(ibV){
-    if(parseFloat(pct26)>0) ibV.innerHTML+=`<div class="ib ok"><b>🟢 Recuperación parcial en 2026 (+${pct26}% vs 2025)</b>Las ventas proyectadas recuperan terreno tras la caída del ${Math.abs(parseFloat(pct25)).toFixed(1)}% en 2025. Estacionalidad consistente: Q4 (oct-nov) generan los mejores meses.</div>`;
-    else ibV.innerHTML+=`<div class="ib al"><b>🔴 Caída en ventas 2026 (${pct26}% vs 2025)</b>Revisar mix de productos y canales de captación.</div>`;
+    if(parseFloat(pct25)>0) ibV.innerHTML+=`<div class="ib ok"><b>🟢 Ventas 2025 crecieron +${pct25}% vs 2024</b>Estacionalidad consistente: Q4 (oct-nov) generan los mejores meses del año.</div>`;
+    else ibV.innerHTML+=`<div class="ib al"><b>🔴 Caída en ventas 2025 (${pct25}% vs 2024)</b>Revisar mix de productos y canales de captación.</div>`;
     // Face & Body contraction
     const fbKey=Object.keys(v.suc_data).find(k=>k.toLowerCase().includes('face'));
     if(fbKey){
-      const fb24=v.suc_data[fbKey]['2024']||0, fb26=v.suc_data[fbKey]['2026']||0;
-      if(fb24>0&&fb26<fb24*0.85)
-        ibV.innerHTML+=`<div class="ib cau"><b>🟡 ${fbKey.replace('NCA ','')}: contracción acumulada del ${((fb24-fb26)/fb24*100).toFixed(0)}% desde 2024</b>Pasó de ${MM(fb24)} (2024) a ${MM(fb26)} (2026). Therapy creció por nueva operación pero con costos RRHH que superan sus ingresos.</div>`;
+      const fb24=v.suc_data[fbKey]['2024']||0, fb25=v.suc_data[fbKey]['2025']||0;
+      if(fb24>0&&fb25<fb24*0.85)
+        ibV.innerHTML+=`<div class="ib cau"><b>🟡 ${fbKey.replace('NCA ','')}: contracción del ${((fb24-fb25)/fb24*100).toFixed(0)}% desde 2024</b>Pasó de ${MM(fb24)} (2024) a ${MM(fb25)} (2025). Revisar mix de tratamientos y estrategia comercial.</div>`;
     }
     if(parseFloat(tickVar)<-10) ibV.innerHTML+=`<div class="ib al"><b>🔴 Ticket promedio cayó de ${CLP(v.ticket_2024[0])} (ene-24) a ${CLP(v.ticket_2025[11])} (dic-25): ${tickVar}%</b>La caída sostenida del ticket sugiere más descuentos, promociones agresivas o migración hacia tratamientos de menor valor.</div>`;
   }
@@ -505,19 +486,18 @@ function buildDetalle(){
 // ── M5 RRHH ───────────────────────────────────────────────────────────────
 function buildRRHH(){
   const r = D.rrhh;
-  const var_pct = ((r.total_2026-r.total_2025)/r.total_2025*100).toFixed(1);
-  const ratio   = (r.total_2026/D.ventas.total_2026*100).toFixed(1);
+  const ratio   = (r.total_2025/D.ventas.total_2025*100).toFixed(1);
+  const mensual_2025 = r.r2025.filter(v=>v>0).length ? r.r2025.reduce((s,v)=>s+v,0)/r.r2025.filter(v=>v>0).length : 0;
 
   document.getElementById('kpi-rrhh').innerHTML =
     kpiCard('RRHH 2025', MM(r.total_2025),'') +
-    kpiCard('RRHH 2026', MM(r.total_2026), PCT(parseFloat(var_pct)), parseFloat(var_pct)>0?'dr':'dg') +
-    kpiCard('RRHH/Ventas 2026', ratio+'%', '', parseFloat(ratio)>50?'dr':parseFloat(ratio)>35?'da':'dg') +
-    kpiCard('Costo Mensual Estable', MM(r.r2026.reduce((s,v)=>s+v,0)/r.r2026.filter(v=>v>0).length),'');
+    kpiCard('RRHH/Ventas 2025', ratio+'%', '', parseFloat(ratio)>50?'dr':parseFloat(ratio)>35?'da':'dg') +
+    kpiCard('Costo Mensual 2025', MM(mensual_2025),'') +
+    kpiCard('Meses con Datos', r.r2025.filter(v=>v>0).length+' de 12', '', '');
 
   // C13 lineas
   mkChart('c13','line',r.labels,[
-    {label:'2025',data:r.r2025,borderColor:CL.p,borderWidth:2,pointRadius:2,fill:false,tension:.3},
-    {label:'2026',data:r.r2026,borderColor:CL.r,borderWidth:2,pointRadius:2,fill:false,tension:.3}
+    {label:'2025',data:r.r2025,borderColor:CL.p,borderWidth:2,pointRadius:2,fill:false,tension:.3}
   ],{scales:{y:{ticks:{callback:v=>MM(v)}}}});
 
   // C15 donut composicion
@@ -562,7 +542,7 @@ function buildRRHH(){
   const ibR = document.getElementById('ib-rrhh');
   if(ibR){
     const ratioN = parseFloat(ratio);
-    if(ratioN>70) ibR.innerHTML+=`<div class="ib al"><b>🔴 CRÍTICO: RRHH creció ${var_pct}% vs ventas +${D.kpis.var_ventas.toFixed(1)}%</b>El ratio RRHH/Ventas saltó de ~45% (2025) a ${ratio}% (2026). Un nivel saludable para estética es 35-45%. Requiere plan de reducción de costos de personal.</div>`;
+    if(ratioN>70) ibR.innerHTML+=`<div class="ib al"><b>🔴 CRÍTICO: RRHH/Ventas en ${ratio}% — muy sobre umbral recomendado</b>Un nivel saludable para estética es 35-45%. El ratio actual requiere plan de reducción de costos de personal.</div>`;
     // Per-sucursal worst analysis
     const worstSucs=(r.ratio_suc||[]).filter(s=>s.ratio>90).slice(0,2);
     if(worstSucs.length>=2)
@@ -689,7 +669,7 @@ function buildNoOp(){
     kpiCard('Gs No Op 2025+2026', MM(nop.total),'') +
     kpiCard('Inversión Digital (hist.)', MM((nop.tipo.find(t=>t.tipo.toLowerCase().includes('digital'))||{monto:0}).monto),'') +
     kpiCard('Mkt Tradicional 2025', MM(D.mkt.total_2025),'') +
-    kpiCard('Inversión Mkt 2026', MM(D.mkt.total_2026),'');
+    kpiCard('Sin datos 2026', '—', 'Datos reales hasta mar 2026','');
 
   const NOP_LABELS={'Inversión digital':'Inv.Digital','Gs Financieros - Bancos':'Gs Fin Bancos','Gs Financieros - TGR':'Gs Fin TGR','Gs Financieros':'Gs Financ.','Asesorías, Honorarios y Consultorías':'Asesorías','Soporte a sistemas TI':'Soporte TI','Gs Marketing y Publicidad':'Mkt Trad.','Ss Aseo':'Ss Aseo','Otros gastos':'Otros','Ss de Seguridad':'Ss Seguridad','Ss de Música ambiental':'Ss Música','Ss Generales':'Ss Generales','Ss Jardinería':'Ss Jardinería'};
   mkChart('c18','bar',nop.tipo.map(t=>NOP_LABELS[t.tipo]||t.tipo),
@@ -726,7 +706,7 @@ function buildNoOp(){
     const mktSummary = [
       {anio:'2024', inv: D.mkt.total_2024, ventas: D.ventas.total_2024},
       {anio:'2025', inv: D.mkt.total_2025, ventas: D.ventas.total_2025},
-      {anio:'2026 (proy)', inv: D.mkt.total_2026, ventas: D.ventas.total_2026},
+      // 2026 excluido — datos reales solo hasta marzo 2026
     ];
     mktSummary.forEach(r=>{
       const roi = r.inv>0? (r.ventas/r.inv).toFixed(1)+'x' : 'S/D';
@@ -743,20 +723,13 @@ function buildNoOp(){
   const ibN = document.getElementById('ib-nop');
   if(ibN){
     const nop = D.no_op;
-    const mktVar = D.mkt.total_2026 && D.mkt.total_2025? ((D.mkt.total_2026-D.mkt.total_2025)/D.mkt.total_2025*100) : 0;
-    // NoOp reduction: compare nop vs ventas vs prior year (use mkt as proxy for digital)
+    // Comparaciones 2026 excluidas — datos reales solo hasta marzo 2026
     const nopDig = nop.tipo.find(t=>(t.tipo||'').toLowerCase().includes('digital'))||{monto:0};
     const nopGsFin = nop.tipo.filter(t=>(t.tipo||'').toLowerCase().includes('financ')||t.tipo.toLowerCase().includes('banco')||t.tipo.toLowerCase().includes('tgr')).reduce((s,t)=>s+t.monto,0);
-    const nopVar = nop.total_2025>0 ? ((nop.total_2026-nop.total_2025)/nop.total_2025*100) : 0;
-    if(nopVar<-20) {
-      const digStr = (nop.digital_2025>0 && nop.digital_2026>=0) ? ` La inversión digital bajó de ${MM(nop.digital_2025)} a ${MM(nop.digital_2026)}.` : '';
-      ibN.innerHTML+=`<div class="ib ok"><b>🟢 Reducción del ${Math.abs(nopVar).toFixed(0)}% en gastos no operacionales 2026</b>Bajaron de ${MM(nop.total_2025)} a ${MM(nop.total_2026)}. Los créditos bancarios terminan parcialmente y la inversión digital bajó significativamente.${digStr}</div>`;
-    } else if(mktVar<-30) {
-      ibN.innerHTML+=`<div class="ib ok"><b>🟢 Reducción del ${Math.abs(mktVar).toFixed(0)}% en gastos de marketing 2026</b>Los créditos bancarios terminan parcialmente y la inversión digital bajó significativamente.</div>`;
-    }
+    if(nop.digital_2025>0) ibN.innerHTML+=`<div class="ib ok"><b>🟢 Gs No Operacionales 2025: ${MM(nop.total_2025)}</b>Incluye gastos financieros, inversión digital (${MM(nop.digital_2025)}) y otros costos no operacionales del año completo.</div>`;
     const topProv = (nop.proveedores||[]).sort((a,b)=>b.monto-a.monto)[0];
     if(topProv && nop.total && topProv.monto/nop.total>0.20) ibN.innerHTML+=`<div class="ib cau"><b>🟡 Concentración en un solo proveedor digital: ${topProv.prov} (${MM(topProv.monto)}, ${(topProv.monto/nop.total*100).toFixed(0)}% del total No Op)</b>Toda la inversión digital se canaliza por un proveedor. Riesgo de dependencia y falta de benchmarking de costo/resultado.</div>`;
-    if(parseFloat(mktVar)<-60) ibN.innerHTML+=`<div class="ib act"><b>🔵 Marketing 2026 bajó a ${MM(D.mkt.total_2026)} (${mktVar.toFixed(0)}%) — monitorear impacto en captación</b>Si el ticket sigue cayendo, el recorte de marketing puede acelerar la erosión de ventas. Priorizar canales con mejor ROI.</div>`;
+    ibN.innerHTML+=`<div class="ib act"><b>🔵 Datos 2026 disponibles solo hasta marzo</b>Las comparaciones interanuales de gastos no operacionales y marketing se actualizarán cuando estén disponibles los datos completos.</div>`;
   }
 }
 
@@ -781,12 +754,11 @@ function buildConclusiones(){
       txt:'Flujo acumulado llega a '+MM(minAcumC)+' en '+mesMinC+'. Con '+MM(fl.saldo_inicial)+' de saldo, la caja se agota entre '+agotaMes+'.'});
   }
 
-  // 2. RRHH insostenible
-  const rrVar = D.rrhh.total_2025>0 ? parseFloat(((D.rrhh.total_2026-D.rrhh.total_2025)/D.rrhh.total_2025*100).toFixed(1)) : 0;
+  // 2. RRHH insostenible (base 2025 — datos reales completos)
   if(k.rrhh_ratio>60) alertas.push({cls:'al',titulo:'RRHH insostenible',
-    txt:'Creció '+PCT(rrVar)+' vs ventas '+PCT(k.var_ventas)+'. El ratio '+k.rrhh_ratio+'% destruye cualquier margen operacional.'});
+    txt:'El ratio RRHH/Ventas 2025 es '+k.rrhh_ratio+'% (referencia saludable: 35-45%). Destruye cualquier margen operacional.'});
   else if(k.rrhh_ratio>45) alertas.push({cls:'al',titulo:'RRHH Crítico',
-    txt:'El ratio RRHH/Ventas 2026 es '+k.rrhh_ratio+'% (referencia saludable: 35-45%). Requiere plan de reducción.'});
+    txt:'El ratio RRHH/Ventas 2025 es '+k.rrhh_ratio+'% (referencia saludable: 35-45%). Requiere plan de reducción.'});
 
   // 3. F&B + Therapy superpasan ventas en personal
   const sucOverRrhh = (D.rrhh.ratio_suc||[]).filter(s=>s.ratio>100).slice(0,2);
@@ -818,13 +790,10 @@ function buildConclusiones(){
   if(bestSuc&&bestSuc.cumpl>150) oks.push({cls:'ok',titulo:bestSuc.nombre.replace('NCA ','')+' sorprende con '+bestSuc.cumpl.toFixed(0)+'% de cumplimiento',
     txt:'Investigar drivers replicables.'});
 
-  // 3. Gs No Op reducción
-  const nopYoYC = D.no_op.total_2025>0 ? Math.round((D.no_op.total_2026-D.no_op.total_2025)/D.no_op.total_2025*100) : 0;
-  if(nopYoYC<-20) oks.push({cls:'ok',titulo:'Gs No Op '+nopYoYC+'%',
-    txt:'Demuestra capacidad de recortar costos cuando hay decisión.'});
+  // 3. Gs No Op — sin comparación 2026 (datos solo hasta marzo)
 
   // 4. Costos operativos controlados
-  const totalVentas = vv.total_2025||vv.total_2026||1;
+  const totalVentas = vv.total_2025||1;
   const opPctC = D.adm_op.op_total ? (D.adm_op.op_total/totalVentas*100).toFixed(1) : null;
   if(opPctC&&parseFloat(opPctC)<12) oks.push({cls:'ok',titulo:'Costos operativos directos controlados (~'+opPctC+'% de ventas)',
     txt:'Buena gestión de insumos.'});
@@ -886,25 +855,26 @@ function buildConclusiones(){
   if(tbRes){
     const tot26 = D.eerr.sucursales.find(s=>s.nombre==='TOTAL')||{};
     const sucsBad = D.eerr.sucursales.filter(s=>s.nombre!=='TOTAL'&&s.ingresos>0&&s.cumpl<70);
-    const txns25 = vv.mensual_txns ? vv.mensual_txns.filter(t=>t.anio===2025).reduce((s,t)=>s+t.txns,0) : 0;
-    const txns24 = vv.mensual_txns ? vv.mensual_txns.filter(t=>t.anio===2024).reduce((s,t)=>s+t.txns,0) : 0;
+    const txns25 = (vv.trans_2025||[]).reduce((s,v)=>s+v,0);
+    const txns24 = (vv.trans_2024||[]).reduce((s,v)=>s+v,0);
     const txnVar = txns24>0 ? ((txns25-txns24)/txns24*100).toFixed(1) : 0;
     const mesesNeg = fl.flujo_acum.filter(v=>v<0).length;
-    const nopYoY = D.no_op.total_2025>0 ? ((D.no_op.total_2026-D.no_op.total_2025)/D.no_op.total_2025*100).toFixed(0) : 0;
-    const topProvNop = (D.no_op.proveedores||[]).sort((a,b)=>b.monto-a.monto)[0];
-    const topProvPct = topProvNop&&D.no_op.total?(topProvNop.monto/D.no_op.total*100).toFixed(0):0;
+    const provMkt = (D.no_op.proveedores||[]).filter(p=>p.tipo&&p.tipo.toLowerCase().includes('digital'));
+    const nProvNop = provMkt.length;
+    const topProvNop = provMkt.sort((a,b)=>b.monto-a.monto)[0];
+    const totalMkt = provMkt.reduce((s,p)=>s+p.monto,0);
+    const topProvPct = topProvNop&&totalMkt?(topProvNop.monto/totalMkt*100).toFixed(0):0;
     const tickAvg25 = vv.ticket_2025&&vv.ticket_2025.filter(t=>t>0).length ? vv.ticket_2025.filter(t=>t>0).reduce((a,b)=>a+b,0)/vv.ticket_2025.filter(t=>t>0).length : 0;
     const rows = [
-      ['Ventas 2026', MM(vv.total_2026), PCT(k.var_ventas)+' YoY', k.var_ventas>=0?'tg-g':'tg-r', k.var_ventas>=0?'OK':'ALERTA'],
-      ['Cumplimiento Ppto '+D.eerr.mes, (tot26.cumpl||0).toFixed(1)+'%', (tot26.cumpl||0)>=100?'Sobre meta':'Bajo meta', (tot26.cumpl||0)>=100?'tg-g':'tg-a', (tot26.cumpl||0)>=100?'OK':'RIESGO'],
-      ['RRHH / Ventas', k.rrhh_ratio+'%', k.rrhh_ratio>70?'+'+((k.rrhh_ratio-45).toFixed(0))+'pp vs umbral':'+pp vs 2025', k.rrhh_ratio>70?'tg-r':k.rrhh_ratio>50?'tg-a':'tg-g', k.rrhh_ratio>70?'CRÍTICO':k.rrhh_ratio>50?'ALERTA':'OK'],
-      ['Flujo Acumulado Dic', MM(k.flujo_final), k.flujo_final<0?'Neg. '+mesesNeg+' meses':'Positivo', k.flujo_final<0?'tg-r':'tg-g', k.flujo_final<0?'CRÍTICO':'OK'],
-      ['Ticket Promedio', tickAvg25>0?CLP(tickAvg25):'—', PCT(k.ticket_var)+' en 2 años', k.ticket_var>=-10?'tg-g':'tg-a', k.ticket_var>=-10?'OK':'ALERTA'],
-      ['Gs No Operacionales', MM(D.no_op.total_2026||D.no_op.total), nopYoY+'% YoY', parseInt(nopYoY)<0?'tg-g':'tg-a', parseInt(nopYoY)<0?'OK':'RIESGO'],
-      ['Margen Operacional '+D.eerr.mes, k.margen_op.toFixed(1)+'%', '—', k.margen_op>30?'tg-g':k.margen_op>20?'tg-a':'tg-r', k.margen_op>30?'SANO':k.margen_op>20?'ALERTA':'CRÍTICO'],
+      ['Ventas 2025', MM(vv.total_2025), PCT(k.var_ventas)+' vs 2024', k.var_ventas>=0?'tg-g':'tg-r', k.var_ventas>=0?'OK':'ALERTA'],
+      ['Cumplimiento Ppto '+D.eerr.mes+' '+D.eerr.anio, (tot26.cumpl||0).toFixed(1)+'%', (tot26.cumpl||0)>=100?'Sobre meta':'Bajo meta', (tot26.cumpl||0)>=100?'tg-g':'tg-a', (tot26.cumpl||0)>=100?'OK':'RIESGO'],
+      ['RRHH / Ventas 2025', k.rrhh_ratio+'%', k.rrhh_ratio>70?'+'+((k.rrhh_ratio-45).toFixed(0))+'pp vs umbral':'ref. 35-45%', k.rrhh_ratio>70?'tg-r':k.rrhh_ratio>50?'tg-a':'tg-g', k.rrhh_ratio>70?'CRÍTICO':k.rrhh_ratio>50?'ALERTA':'OK'],
+      ['Ticket Promedio 2025', tickAvg25>0?CLP(tickAvg25):'—', PCT(k.ticket_var)+' vs 2024', k.ticket_var>=-10?'tg-g':'tg-a', k.ticket_var>=-10?'OK':'ALERTA'],
+      ['Gs No Operacionales 2025', MM(D.no_op.total_2025||D.no_op.total), 'Dato real completo', 'tg-a', 'REVISAR'],
+      ['Margen Operacional 2025', k.margen_op.toFixed(1)+'%', 'año completo', k.margen_op>30?'tg-g':k.margen_op>20?'tg-a':'tg-r', k.margen_op>30?'SANO':k.margen_op>20?'ALERTA':'CRÍTICO'],
       ['Sucursales <70% Cumpl.', sucsBad.length+' de '+(D.eerr.sucursales.filter(s=>s.nombre!=='TOTAL'&&s.ingresos>0).length), sucsBad.map(s=>s.nombre.replace('NCA ','')).join('+'), sucsBad.length>0?'tg-a':'tg-g', sucsBad.length>0?'RIESGO':'OK'],
-      ['Transacciones 2025', NUM(txns25), txnVar+'% vs 2024', parseFloat(txnVar)>=0?'tg-g':'tg-a', parseFloat(txnVar)>=0?'OK':'ALERTA'],
-      ['Concentración Mkt', topProvNop?'1 proveedor':'—', topProvNop?(topProvNop.prov+' '+topProvPct+'%'):'—', parseInt(topProvPct)>50?'tg-r':'tg-g', parseInt(topProvPct)>50?'RIESGO':'OK'],
+      ['Transacciones 2025', txns25>0?NUM(txns25):'—', txns25>0?txnVar+'% vs 2024':'sin dato', txns25>0?(parseFloat(txnVar)>=0?'tg-g':'tg-a'):'tg-a', txns25>0?(parseFloat(txnVar)>=0?'OK':'ALERTA'):'REVISAR'],
+      ['Concentración Mkt', topProvNop?'1 proveedor':'—', topProvNop?(topProvNop.prov+' '+topProvPct+'%'):'—', (nProvNop===1||parseInt(topProvPct)>50)?'tg-r':'tg-g', (nProvNop===1||parseInt(topProvPct)>50)?'RIESGO':'OK'],
     ];
     rows.forEach(([ind,val,tend,cls,lbl])=>{
       tbRes.innerHTML+=`<tr>
@@ -919,7 +889,6 @@ function buildConclusiones(){
 
 // ── INIT ──────────────────────────────────────────────────────────────────
 buildEERR();
-buildFlujo();
 buildVentas();
 buildDetalle();
 buildRRHH();
