@@ -1840,6 +1840,7 @@ function buildConclusiones(){{
     const txnVar = txns24>0 ? ((txns25-txns24)/txns24*100).toFixed(1) : 0;
     const mesesNeg = fl.flujo_acum.filter(v=>v<0).length;
     const topProvNop = (D.no_op.proveedores||[]).sort((a,b)=>b.monto-a.monto)[0];
+    const nProvNop = (D.no_op.proveedores||[]).length;
     const topProvPct = topProvNop&&D.no_op.total?(topProvNop.monto/D.no_op.total*100).toFixed(0):0;
     const tickAvg25 = vv.ticket_2025&&vv.ticket_2025.filter(t=>t>0).length ? vv.ticket_2025.filter(t=>t>0).reduce((a,b)=>a+b,0)/vv.ticket_2025.filter(t=>t>0).length : 0;
     const rows = [
@@ -1852,7 +1853,7 @@ function buildConclusiones(){{
       ['Margen Operacional '+D.eerr.mes+' 2026', k.margen_op.toFixed(1)+'%', 'datos hasta mar 2026', k.margen_op>30?'tg-g':k.margen_op>20?'tg-a':'tg-r', k.margen_op>30?'SANO':k.margen_op>20?'ALERTA':'CRÍTICO'],
       ['Sucursales <70% Cumpl.', sucsBad.length+' de '+(D.eerr.sucursales.filter(s=>s.nombre!=='TOTAL'&&s.ingresos>0).length), sucsBad.map(s=>s.nombre.replace('NCA ','')).join('+'), sucsBad.length>0?'tg-a':'tg-g', sucsBad.length>0?'RIESGO':'OK'],
       ['Transacciones 2025', NUM(txns25), txnVar+'% vs 2024', parseFloat(txnVar)>=0?'tg-g':'tg-a', parseFloat(txnVar)>=0?'OK':'ALERTA'],
-      ['Concentración Mkt', topProvNop?'1 proveedor':'—', topProvNop?(topProvNop.prov+' '+topProvPct+'%'):'—', parseInt(topProvPct)>50?'tg-r':'tg-g', parseInt(topProvPct)>50?'RIESGO':'OK'],
+      ['Concentración Mkt', topProvNop?'1 proveedor':'—', topProvNop?(topProvNop.prov+' '+topProvPct+'%'):'—', (nProvNop===1||parseInt(topProvPct)>50)?'tg-r':'tg-g', (nProvNop===1||parseInt(topProvPct)>50)?'RIESGO':'OK'],
     ];
     rows.forEach(([ind,val,tend,cls,lbl])=>{{
       tbRes.innerHTML+=`<tr>
