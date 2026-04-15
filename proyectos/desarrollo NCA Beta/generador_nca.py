@@ -229,6 +229,94 @@ def leer_eerr(xl) -> dict:
     }
 
 
+# ─── ETL: EERR 2025 ANUAL (desde hojas de detalle) ───────────────────────────
+
+def leer_eerr_2025_anual(xl) -> dict:
+    """
+    Construye el EERR anual 2025 desde hojas de detalle.
+    Usa ventas reales vs 2024 como referencia de cumplimiento.
+    """
+    import warnings
+    warnings.filterwarnings("ignore")
+
+    # 1. Ventas por sucursal (2024 y 2025)
+    vta = pd.read_excel(xl, sheet_name="1 VENTA", header=0)
+    vta.columns = ["Anio", "Mes", "Sucursal", "Venta"]
+    vta["Venta"] = pd.to_numeric(vta["Venta"], errors="coerce").fillna(0)
+    vta_24 = vta[vta["Anio"] == 2024].groupby("Sucursal")["Venta"].sum()
+    vta_25 = vta[vta["Anio"] == 2025].groupby("Sucursal")["Venta"].sum()
+
+    # 2. RRHH 2025 por sucursal
+    rrhh = pd.read_excel(xl, sheet_name="2 RRHH", header=0)
+    rrhh.columns = ["Anio", "Mes", "Sucursal", "Importe", "TipoGasto"]
+    rrhh["Importe"] = pd.to_numeric(rrhh["Importe"], errors="coerce").fillna(0)
+    rrhh_25 = rrhh[rrhh["Anio"] == 2025].groupby("Sucursal")["Importe"].sum()
+
+    # 3–5. Gastos Adm, Op, No Op 2025 por sucursal
+    cols_gasto = ["FechaFact","FechaVenc","FechaPago","Anio","Mes","Sucursal",
+                  "Proveedor","TipoGasto","MontoBruto","MontoNeto","IVA","Glosa"]
+    def _leer_gasto(hoja):
+        df = pd.read_excel(xl, sheet_name=hoja, header=0)
+        df.columns = cols_gasto
+        df["MontoBruto"] = pd.to_numeric(df["MontoBruto"], errors="coerce").fillna(0)
+        return df[df["Anio"] == 2025].groupby("Sucursal")["MontoBruto"].sum()
+
+    gadm_25 = _leer_gasto("3 GS ADMIN")
+    gop_25  = _leer_gasto("4 GS OP")
+    gnop_25 = _leer_gasto("5 GS NO OP")
+
+    # Unión de sucursales
+    sucursales_keys = sorted(set(
+        list(vta_25.index) + list(rrhh_25.index) + list(gadm_25.index)
+    ))
+
+    sucursales = []
+    tot_ing = tot_rr = tot_adm = tot_op = tot_nop = 0.0
+
+    for suc in sucursales_keys:
+        ing = float(vta_25.get(suc, 0))
+        rr  = float(rrhh_25.get(suc, 0))
+        adm = float(gadm_25.get(suc, 0))
+        op  = float(gop_25.get(suc, 0))
+        nop = float(gnop_25.get(suc, 0))
+        res = ing - rr - adm - op - nop
+        mg  = (res / ing * 100) if ing > 0 else 0.0
+        ing24 = float(vta_24.get(suc, 0))
+        cumpl = (ing / ing24 * 100) if ing24 > 0 else 0.0
+
+        sucursales.append({
+            "nombre": suc,
+            "ingresos": ing, "ingresos_ppto": ing24,
+            "ingresos_cumpl": cumpl / 100,
+            "gs_personal": rr, "gs_personal_ppto": 0, "gs_personal_cumpl": 0,
+            "gs_admin": adm, "gs_admin_ppto": 0, "gs_admin_cumpl": 0,
+            "gs_op": op, "gs_op_ppto": 0, "gs_op_cumpl": 0,
+            "gs_no_op": nop, "gs_no_op_ppto": 0, "gs_no_op_cumpl": 0,
+            "resultado": res, "resultado_ppto": 0, "resultado_cumpl": 0,
+            "margen_pct": mg, "cumpl": cumpl,
+        })
+        tot_ing += ing; tot_rr += rr; tot_adm += adm; tot_op += op; tot_nop += nop
+
+    tot_res = tot_ing - tot_rr - tot_adm - tot_op - tot_nop
+    tot_mg  = (tot_res / tot_ing * 100) if tot_ing > 0 else 0.0
+    ing24_total = float(vta_24.sum())
+    tot_cumpl = (tot_ing / ing24_total * 100) if ing24_total > 0 else 0.0
+
+    sucursales.append({
+        "nombre": "TOTAL",
+        "ingresos": tot_ing, "ingresos_ppto": ing24_total,
+        "ingresos_cumpl": tot_cumpl / 100,
+        "gs_personal": tot_rr, "gs_personal_ppto": 0, "gs_personal_cumpl": 0,
+        "gs_admin": tot_adm, "gs_admin_ppto": 0, "gs_admin_cumpl": 0,
+        "gs_op": tot_op, "gs_op_ppto": 0, "gs_op_cumpl": 0,
+        "gs_no_op": tot_nop, "gs_no_op_ppto": 0, "gs_no_op_cumpl": 0,
+        "resultado": tot_res, "resultado_ppto": 0, "resultado_cumpl": 0,
+        "margen_pct": tot_mg, "cumpl": tot_cumpl,
+    })
+
+    return {"anio": 2025, "mes": "Anual", "mes_num": 0, "sucursales": sucursales}
+
+
 # ─── ETL: FLUJO ───────────────────────────────────────────────────────────────
 
 def leer_flujo(xl) -> dict:
@@ -736,11 +824,11 @@ def generar_html(data: dict, output_path: Path):
     mkt     = data["mkt"]
     seg     = data.get("seg", {})
 
-    # ── KPIs globales para conclusiones
-    tot26 = ventas["total_2026"]
+    # ── KPIs globales para conclusiones (base 2025 — datos completos)
     tot25 = ventas["total_2025"]
-    var_venta = _pct(tot26 - tot25, tot25)
-    rrhh_ratio = _pct(rrhh["total_2026"], tot26)
+    tot24 = ventas["total_2024"]
+    var_venta = _pct(tot25 - tot24, tot24)
+    rrhh_ratio = _pct(rrhh["total_2025"], tot25)
     flujo_min = min(flujo["flujo_acum"])
     flujo_final = flujo["flujo_acum"][-1] if flujo["flujo_acum"] else 0
     ticket_avg_25 = [t for t in ventas["ticket_2025"] if t > 0]
@@ -753,8 +841,8 @@ def generar_html(data: dict, output_path: Path):
     eerr_tot = next((s for s in eerr["sucursales"] if s["nombre"] == "TOTAL"), {})
     margen_op_pct = _pct(eerr_tot.get("resultado", 0), eerr_tot.get("ingresos", 1))
 
-    # Participación sucursales en ventas 2026
-    suc_totals = [(k, v.get(2026, 0)) for k, v in ventas["suc_data"].items()]
+    # Participación sucursales en ventas 2025
+    suc_totals = [(k, v.get(2025, 0)) for k, v in ventas["suc_data"].items()]
     suc_totals.sort(key=lambda x: x[1], reverse=True)
     total_suc = sum(v for _, v in suc_totals) or 1
 
@@ -824,7 +912,7 @@ def generar_html(data: dict, output_path: Path):
                 {"tipo": r["Tipo Producto"], "venta": _jnum(r["Venta"])}
                 for r in ventas["tipo_prod"]
             ],
-            "suc_totals": [{"suc": k, "v26": _jnum(v)} for k, v in suc_totals],
+            "suc_totals": [{"suc": k, "v25": _jnum(v)} for k, v in suc_totals],
             "suc_data": {
                 k: {
                     "2024": _jnum(ventas["suc_data"][k].get(2024, 0)),
@@ -953,10 +1041,10 @@ tr:hover td{{background:var(--s2)}}
 <body>
 <div class="ctn">
 <h1>NCA Clínicas — Análisis Financiero Integral</h1>
-<p class="sub">EERR · Flujo de Caja · Ventas · RRHH · Gastos · Marketing · KPIs — Ene 2024 a Dic 2026</p>
+<p class="sub">EERR · Ventas · RRHH · Gastos · Marketing · KPIs — Datos reales ene 2024 a mar 2025</p>
 
 <nav class="nav">
-<a href="#m1">1·EERR</a><a href="#m2">2·Flujo Caja</a><a href="#m3">3·Ventas</a><a href="#m4">4·Detalle Ventas</a><a href="#m5">5·RRHH</a><a href="#m6">6·Gastos Adm/Op</a><a href="#m7">7·Gs No Op + Mkt</a><a href="#m8">8·Conclusiones</a>
+<a href="#m1">1·EERR</a><a href="#m2">2·Ventas</a><a href="#m3">3·Detalle Ventas</a><a href="#m4">4·RRHH</a><a href="#m5">5·Gastos Adm/Op</a><a href="#m6">6·Gs No Op + Mkt</a><a href="#m7">7·Conclusiones</a>
 </nav>
 
 <!-- === M1: EERR === -->
@@ -970,7 +1058,7 @@ tr:hover td{{background:var(--s2)}}
 <div class="c" style="margin-bottom:16px">
 <h3>Detalle por Sucursal — <span id="eerr-periodo2"></span> (millones CLP)</h3>
 <table>
-<tr><th>Sucursal</th><th>Ingresos</th><th>Gs Personal</th><th>Gs Adm</th><th>Gs Op</th><th>Gs NoOp</th><th>Resultado</th><th>Margen</th><th>Cumpl.</th></tr>
+<tr><th>Sucursal</th><th>Ingresos</th><th>Gs Personal</th><th>Gs Adm</th><th>Gs Op</th><th>Gs NoOp</th><th>Resultado</th><th>Margen</th><th>vs 2024</th></tr>
 <tbody id="tbody-eerr"></tbody>
 </table></div>
 <div id="ib-eerr"></div>
@@ -978,23 +1066,10 @@ tr:hover td{{background:var(--s2)}}
 
 <div class="dv"></div>
 
-<!-- === M2: FLUJO === -->
-<section class="sec" id="m2">
-<h2>Módulo 2 · Flujo de Caja Proyectado 2026</h2>
-<div class="g4" id="kpi-flujo"></div>
-<div class="c" style="margin-bottom:16px"><h3>Flujo Mensual y Acumulado 2026</h3><div class="cw cw-t"><canvas id="c3"></canvas></div></div>
-<div class="g2">
-<div class="c"><h3>Composición Egresos Mensuales (M CLP)</h3><div class="cw"><canvas id="c4"></canvas></div></div>
-<div class="c"><h3>Utilidad Neta Mensual</h3><div class="cw"><canvas id="c5"></canvas></div></div>
-</div>
-<div id="ib-flujo"></div>
-</section>
-
-<div class="dv"></div>
 
 <!-- === M3: VENTAS === -->
-<section class="sec" id="m3">
-<h2>Módulo 3 · Ventas Consolidadas 2024–2025</h2>
+<section class="sec" id="m2">
+<h2>Módulo 2 · Ventas Consolidadas 2024–2025</h2>
 <div class="g4" id="kpi-ventas"></div>
 <div class="c" style="margin-bottom:16px"><h3>Evolución de Ventas Mensuales</h3><div class="cw cw-t"><canvas id="c6"></canvas></div></div>
 <div class="g2">
@@ -1007,8 +1082,8 @@ tr:hover td{{background:var(--s2)}}
 <div class="dv"></div>
 
 <!-- === M4: VENTAS DETALLE === -->
-<section class="sec" id="m4">
-<h2>Módulo 4 · Detalle de Ventas — <span id="tx-count"></span> Transacciones</h2>
+<section class="sec" id="m3">
+<h2>Módulo 3 · Detalle de Ventas — <span id="tx-count"></span> Transacciones</h2>
 <div class="g4" id="kpi-detalle"></div>
 <div class="g2">
 <div class="c"><h3>Top Tratamientos por Facturación</h3><div class="cw cw-t"><canvas id="c9"></canvas></div></div>
@@ -1024,8 +1099,8 @@ tr:hover td{{background:var(--s2)}}
 <div class="dv"></div>
 
 <!-- === M5: RRHH === -->
-<section class="sec" id="m5">
-<h2>Módulo 5 · Gastos de Personal (RRHH)</h2>
+<section class="sec" id="m4">
+<h2>Módulo 4 · Gastos de Personal (RRHH)</h2>
 <div class="g4" id="kpi-rrhh"></div>
 <div class="g2">
 <div class="c"><h3>Evolución Mensual RRHH 2025</h3><div class="cw"><canvas id="c13"></canvas></div></div>
@@ -1040,8 +1115,8 @@ tr:hover td{{background:var(--s2)}}
 <div class="dv"></div>
 
 <!-- === M6: GS ADM + OP === -->
-<section class="sec" id="m6">
-<h2>Módulo 6 · Gastos Administrativos y Operativos</h2>
+<section class="sec" id="m5">
+<h2>Módulo 5 · Gastos Administrativos y Operativos</h2>
 <div class="g2">
 <div class="c"><h3>Gastos Administrativos por Tipo</h3><div class="cw"><canvas id="c16"></canvas></div></div>
 <div class="c"><h3>Gastos Operativos por Tipo</h3><div class="cw"><canvas id="c17"></canvas></div></div>
@@ -1073,8 +1148,8 @@ tr:hover td{{background:var(--s2)}}
 <div class="dv"></div>
 
 <!-- === M7: GS NO OP + MKT === -->
-<section class="sec" id="m7">
-<h2>Módulo 7 · Gastos No Operacionales + Marketing</h2>
+<section class="sec" id="m6">
+<h2>Módulo 6 · Gastos No Operacionales + Marketing</h2>
 <div class="g4" id="kpi-nop"></div>
 <div class="g2">
 <div class="c"><h3>Distribución Gs No Operacionales (total acumulado)</h3><div class="cw cw-t"><canvas id="c18"></canvas></div></div>
@@ -1089,8 +1164,8 @@ tr:hover td{{background:var(--s2)}}
 <div class="dv"></div>
 
 <!-- === M8: CONCLUSIONES === -->
-<section class="sec" id="m8">
-<h2>Módulo 8 · Conclusiones y Plan de Acción</h2>
+<section class="sec" id="m7">
+<h2>Módulo 7 · Conclusiones y Plan de Acción</h2>
 <div class="g3">
 <div class="c" style="border-left:3px solid var(--rd)" id="col-alertas"></div>
 <div class="c" style="border-left:3px solid var(--gn)" id="col-ok"></div>
@@ -1151,18 +1226,18 @@ function buildEERR(){{
   const totIng   = tot.ingresos||1;
   const totMg    = _jn(totRes/totIng*100);
   document.getElementById('kpi-eerr').innerHTML =
-    kpiCard('Ingresos Reales', MM(tot.ingresos||0), '', '') +
-    kpiCard('Cumplimiento Ppto', (totCumpl).toFixed(1)+'%', totCumpl>=100?'Supera meta global':'Bajo meta', totCumpl>=100?'dg':'dr') +
+    kpiCard('Ingresos 2025 Anual', MM(tot.ingresos||0), 'Año completo 12 meses', '') +
+    kpiCard('vs 2024', (totCumpl).toFixed(1)+'%', totCumpl>=100?'Creció vs 2024':'Cayó vs 2024', totCumpl>=100?'dg':'dr') +
     kpiCard('Resultado Operacional', MM(totRes), 'Margen '+totMg.toFixed(1)+'%', totRes>=0?'dg':'dr') +
-    kpiCard('Gastos Totales', MM((tot.gs_personal||0)+(tot.gs_admin||0)+(tot.gs_op||0)+(tot.gs_nop||0)), '', 'wn');
+    kpiCard('Gastos Totales 2025', MM((tot.gs_personal||0)+(tot.gs_admin||0)+(tot.gs_op||0)+(tot.gs_nop||0)), '', 'wn');
 
   // C1 cumplimiento (excluye Casa Matriz)
   const sucsC1 = sucs.filter(s=>s.nombre!=='Casa Matriz');
   const cumpl = sucsC1.map(s=>s.cumpl);
   mkChart('c1','bar',sucsC1.map(s=>s.nombre.replace('NCA ','')),
-    [{{label:'Cumpl. %',data:cumpl,backgroundColor:cumpl.map(v=>v>=100?CL.g:v>=80?CL.a:CL.r),borderRadius:4}}],
+    [{{label:'Ventas 2025 vs 2024 %',data:cumpl,backgroundColor:cumpl.map(v=>v>=100?CL.g:v>=80?CL.a:CL.r),borderRadius:4}}],
     {{scales:{{y:{{beginAtZero:true,ticks:{{callback:v=>v+'%'}}}}}},plugins:{{legend:{{display:false}},
-    tooltip:{{callbacks:{{label:c=>c.raw.toFixed(1)+'%'}}}}}}}});
+    tooltip:{{callbacks:{{label:c=>c.raw.toFixed(1)+'% vs 2024'}}}}}}}});
 
   // C2 resultado
   const res = sucs.map(s=>s.resultado/1e6);
@@ -1202,12 +1277,12 @@ function buildEERR(){{
     const surplus=tot.ingresos-(tot.ingresos_ppto||tot.ingresos);
     if(totCumpl>=100){{
       const bestPct=(best.ingresos_ppto&&best.ingresos_ppto>0)?(best.ingresos/best.ingresos_ppto*100).toFixed(0):null;
-      ibEl.innerHTML+=`<div class="ib ok"><b>🟢 Ingresos totales superan presupuesto (${{surplus>0?'+':''}}${{MM(Math.abs(surplus))}}, ${{totCumpl.toFixed(1)}}%)</b>A nivel consolidado, ${{periodo}} cumple la meta. ${{best.nombre.replace('NCA ','')}} sorprende con ${{MM(best.ingresos)}} vs ${{MM(best.ingresos_ppto||best.ingresos)}} presupuestados${{bestPct?' ('+bestPct+'%), lo que sugiere un ajuste de ppto necesario o un evento puntual extraordinario':''}}.</div>`;
+      ibEl.innerHTML+=`<div class="ib ok"><b>🟢 Ingresos 2025 superan 2024 (${{surplus>0?'+':''}}${{MM(Math.abs(surplus))}}, ${{totCumpl.toFixed(1)}}%)</b>A nivel consolidado, el año 2025 creció vs 2024. ${{best.nombre.replace('NCA ','')}} lideró con ${{MM(best.ingresos)}} vs ${{MM(best.ingresos_ppto||best.ingresos)}} en 2024${{bestPct?' ('+bestPct+'%)':''}}.</div>`;
     }}
     if(lowSucs.length>=2)
-      ibEl.innerHTML+=`<div class="ib al"><b>🔴 ${{lowSucs[0].nombre.replace('NCA ','')}} (${{lowSucs[0].cumpl.toFixed(1)}}%) y ${{lowSucs[1].nombre.replace('NCA ','')}} (${{lowSucs[1].cumpl.toFixed(1)}}%) muy por debajo del presupuesto</b>${{lowSucs[0].nombre.replace('NCA ','')}} genera solo ${{MM(lowSucs[0].ingresos)}} de los ${{MM(lowSucs[0].ingresos_ppto||0)}} presupuestados. ${{lowSucs[1].nombre.replace('NCA ','')}} ${{MM(lowSucs[1].ingresos)}} de ${{MM(lowSucs[1].ingresos_ppto||0)}}. Estas dos sucursales necesitan plan de acción comercial urgente.</div>`;
+      ibEl.innerHTML+=`<div class="ib al"><b>🔴 ${{lowSucs[0].nombre.replace('NCA ','')}} (${{lowSucs[0].cumpl.toFixed(1)}}%) y ${{lowSucs[1].nombre.replace('NCA ','')}} (${{lowSucs[1].cumpl.toFixed(1)}}%) cayeron vs 2024</b>${{lowSucs[0].nombre.replace('NCA ','')}} generó ${{MM(lowSucs[0].ingresos)}} vs ${{MM(lowSucs[0].ingresos_ppto||0)}} en 2024. ${{lowSucs[1].nombre.replace('NCA ','')}} ${{MM(lowSucs[1].ingresos)}} vs ${{MM(lowSucs[1].ingresos_ppto||0)}}. Estas sucursales requieren plan de acción comercial.</div>`;
     else if(lowSucs.length===1)
-      ibEl.innerHTML+=`<div class="ib al"><b>🔴 ${{lowSucs[0].nombre.replace('NCA ','')}} (${{lowSucs[0].cumpl.toFixed(1)}}%) muy por debajo del presupuesto</b>Genera solo ${{MM(lowSucs[0].ingresos)}} de los ${{MM(lowSucs[0].ingresos_ppto||0)}} presupuestados. Necesita plan de acción comercial urgente.</div>`;
+      ibEl.innerHTML+=`<div class="ib al"><b>🔴 ${{lowSucs[0].nombre.replace('NCA ','')}} (${{lowSucs[0].cumpl.toFixed(1)}}%) cayó vs 2024</b>Generó ${{MM(lowSucs[0].ingresos)}} vs ${{MM(lowSucs[0].ingresos_ppto||0)}} en 2024. Requiere plan de acción comercial.</div>`;
     const cm = sucs.find(s=>s.nombre==='Casa Matriz');
     const totalGs = sucs.reduce((s,r)=>s+((r.gs_personal||0)+(r.gs_admin||0)+(r.gs_op||0)+(r.gs_nop||0)),0)||1;
     if(cm && Math.abs(cm.resultado)>1e8){{
@@ -1269,10 +1344,7 @@ function buildFlujo(){{
   const primerNegMes=primerNegIdx>=0?fl.labels[primerNegIdx]:null;
   if(primerNegMes)
     ibFl.innerHTML+=`<div class="ib al"><b>🔴 CRÍTICO: Caja real negativa desde ~${{primerNegMes}} (${{MM(fl.saldo_inicial)}} inicial - ${{MM(Math.abs(minAcum))}} mínimo acumulado = ${{MM(fl.saldo_inicial+minAcum)}} en ${{mesMin}})</b>Con saldo inicial de ${{MM(fl.saldo_inicial)}}, la empresa se queda sin efectivo entre ${{primerNegMes}} y ${{mesMin}}. El piso de ${{MM(minAcum)}} en ${{mesMin}} requiere inyección de capital.</div>`;
-  const rr26=D.rrhh.r2026, rrEne=rr26[0]||0;
-  const rrPico=Math.max(...rr26), rrPicoIdx=rr26.indexOf(rrPico), rrPicoMes=fl.labels[rrPicoIdx]||'';
-  if(rrPico>rrEne*1.3)
-    ibFl.innerHTML+=`<div class="ib al"><b>🔴 RRHH salta de ${{MM(rrEne)}} (ene) a ${{MM(rrPico)}} (${{rrPicoMes}}) y se estabiliza ahí</b>Desde ${{rrPicoMes}}, RRHH consume entre 73-92% de los ingresos mensuales. Este nivel destruye la caja sistemáticamente.</div>`;
+  // RRHH 2026 excluido — datos reales solo hasta marzo 2026
   const ppmPct = fl.ppm_pct||[], ppmVal = fl.ppm_val||[];
   const ppmIni = ppmPct[0]||0, ppmMax = Math.max(...ppmPct.filter(v=>v>0))||0;
   const ppmJumpIdx = ppmPct.findIndex(v=>v>ppmIni+0.005);
@@ -1577,7 +1649,7 @@ function buildNoOp(){{
     kpiCard('Gs No Op 2025+2026', MM(nop.total),'') +
     kpiCard('Inversión Digital (hist.)', MM((nop.tipo.find(t=>t.tipo.toLowerCase().includes('digital'))||{{monto:0}}).monto),'') +
     kpiCard('Mkt Tradicional 2025', MM(D.mkt.total_2025),'') +
-    kpiCard('Inversión Mkt 2026', MM(D.mkt.total_2026),'');
+    kpiCard('Sin datos 2026', '—', 'Datos reales hasta mar 2026','');
 
   const NOP_LABELS={{'Inversión digital':'Inv.Digital','Gs Financieros - Bancos':'Gs Fin Bancos','Gs Financieros - TGR':'Gs Fin TGR','Gs Financieros':'Gs Financ.','Asesorías, Honorarios y Consultorías':'Asesorías','Soporte a sistemas TI':'Soporte TI','Gs Marketing y Publicidad':'Mkt Trad.','Ss Aseo':'Ss Aseo','Otros gastos':'Otros','Ss de Seguridad':'Ss Seguridad','Ss de Música ambiental':'Ss Música','Ss Generales':'Ss Generales','Ss Jardinería':'Ss Jardinería'}};
   mkChart('c18','bar',nop.tipo.map(t=>NOP_LABELS[t.tipo]||t.tipo),
@@ -1614,7 +1686,7 @@ function buildNoOp(){{
     const mktSummary = [
       {{anio:'2024', inv: D.mkt.total_2024, ventas: D.ventas.total_2024}},
       {{anio:'2025', inv: D.mkt.total_2025, ventas: D.ventas.total_2025}},
-      {{anio:'2026 (proy)', inv: D.mkt.total_2026, ventas: D.ventas.total_2026}},
+      // 2026 excluido — datos reales solo hasta marzo 2026
     ];
     mktSummary.forEach(r=>{{
       const roi = r.inv>0? (r.ventas/r.inv).toFixed(1)+'x' : 'S/D';
@@ -1631,20 +1703,13 @@ function buildNoOp(){{
   const ibN = document.getElementById('ib-nop');
   if(ibN){{
     const nop = D.no_op;
-    const mktVar = D.mkt.total_2026 && D.mkt.total_2025? ((D.mkt.total_2026-D.mkt.total_2025)/D.mkt.total_2025*100) : 0;
-    // NoOp reduction: compare nop vs ventas vs prior year (use mkt as proxy for digital)
+    // Comparaciones 2026 excluidas — datos reales solo hasta marzo 2026
     const nopDig = nop.tipo.find(t=>(t.tipo||'').toLowerCase().includes('digital'))||{{monto:0}};
     const nopGsFin = nop.tipo.filter(t=>(t.tipo||'').toLowerCase().includes('financ')||t.tipo.toLowerCase().includes('banco')||t.tipo.toLowerCase().includes('tgr')).reduce((s,t)=>s+t.monto,0);
-    const nopVar = nop.total_2025>0 ? ((nop.total_2026-nop.total_2025)/nop.total_2025*100) : 0;
-    if(nopVar<-20) {{
-      const digStr = (nop.digital_2025>0 && nop.digital_2026>=0) ? ` La inversión digital bajó de ${{MM(nop.digital_2025)}} a ${{MM(nop.digital_2026)}}.` : '';
-      ibN.innerHTML+=`<div class="ib ok"><b>🟢 Reducción del ${{Math.abs(nopVar).toFixed(0)}}% en gastos no operacionales 2026</b>Bajaron de ${{MM(nop.total_2025)}} a ${{MM(nop.total_2026)}}. Los créditos bancarios terminan parcialmente y la inversión digital bajó significativamente.${{digStr}}</div>`;
-    }} else if(mktVar<-30) {{
-      ibN.innerHTML+=`<div class="ib ok"><b>🟢 Reducción del ${{Math.abs(mktVar).toFixed(0)}}% en gastos de marketing 2026</b>Los créditos bancarios terminan parcialmente y la inversión digital bajó significativamente.</div>`;
-    }}
+    if(nop.digital_2025>0) ibN.innerHTML+=`<div class="ib ok"><b>🟢 Gs No Operacionales 2025: ${{MM(nop.total_2025)}}</b>Incluye gastos financieros, inversión digital (${{MM(nop.digital_2025)}}) y otros costos no operacionales del año completo.</div>`;
     const topProv = (nop.proveedores||[]).sort((a,b)=>b.monto-a.monto)[0];
     if(topProv && nop.total && topProv.monto/nop.total>0.20) ibN.innerHTML+=`<div class="ib cau"><b>🟡 Concentración en un solo proveedor digital: ${{topProv.prov}} (${{MM(topProv.monto)}}, ${{(topProv.monto/nop.total*100).toFixed(0)}}% del total No Op)</b>Toda la inversión digital se canaliza por un proveedor. Riesgo de dependencia y falta de benchmarking de costo/resultado.</div>`;
-    if(parseFloat(mktVar)<-60) ibN.innerHTML+=`<div class="ib act"><b>🔵 Marketing 2026 bajó a ${{MM(D.mkt.total_2026)}} (${{mktVar.toFixed(0)}}%) — monitorear impacto en captación</b>Si el ticket sigue cayendo, el recorte de marketing puede acelerar la erosión de ventas. Priorizar canales con mejor ROI.</div>`;
+    ibN.innerHTML+=`<div class="ib act"><b>🔵 Datos 2026 disponibles solo hasta marzo</b>Las comparaciones interanuales de gastos no operacionales y marketing se actualizarán cuando estén disponibles los datos completos.</div>`;
   }}
 }}
 
@@ -1669,12 +1734,11 @@ function buildConclusiones(){{
       txt:'Flujo acumulado llega a '+MM(minAcumC)+' en '+mesMinC+'. Con '+MM(fl.saldo_inicial)+' de saldo, la caja se agota entre '+agotaMes+'.'}});
   }}
 
-  // 2. RRHH insostenible
-  const rrVar = D.rrhh.total_2025>0 ? parseFloat(((D.rrhh.total_2026-D.rrhh.total_2025)/D.rrhh.total_2025*100).toFixed(1)) : 0;
+  // 2. RRHH insostenible (base 2025 — datos reales completos)
   if(k.rrhh_ratio>60) alertas.push({{cls:'al',titulo:'RRHH insostenible',
-    txt:'Creció '+PCT(rrVar)+' vs ventas '+PCT(k.var_ventas)+'. El ratio '+k.rrhh_ratio+'% destruye cualquier margen operacional.'}});
+    txt:'El ratio RRHH/Ventas 2025 es '+k.rrhh_ratio+'% (referencia saludable: 35-45%). Destruye cualquier margen operacional.'}});
   else if(k.rrhh_ratio>45) alertas.push({{cls:'al',titulo:'RRHH Crítico',
-    txt:'El ratio RRHH/Ventas 2026 es '+k.rrhh_ratio+'% (referencia saludable: 35-45%). Requiere plan de reducción.'}});
+    txt:'El ratio RRHH/Ventas 2025 es '+k.rrhh_ratio+'% (referencia saludable: 35-45%). Requiere plan de reducción.'}});
 
   // 3. F&B + Therapy superpasan ventas en personal
   const sucOverRrhh = (D.rrhh.ratio_suc||[]).filter(s=>s.ratio>100).slice(0,2);
@@ -1706,13 +1770,10 @@ function buildConclusiones(){{
   if(bestSuc&&bestSuc.cumpl>150) oks.push({{cls:'ok',titulo:bestSuc.nombre.replace('NCA ','')+' sorprende con '+bestSuc.cumpl.toFixed(0)+'% de cumplimiento',
     txt:'Investigar drivers replicables.'}});
 
-  // 3. Gs No Op reducción
-  const nopYoYC = D.no_op.total_2025>0 ? Math.round((D.no_op.total_2026-D.no_op.total_2025)/D.no_op.total_2025*100) : 0;
-  if(nopYoYC<-20) oks.push({{cls:'ok',titulo:'Gs No Op '+nopYoYC+'%',
-    txt:'Demuestra capacidad de recortar costos cuando hay decisión.'}});
+  // 3. Gs No Op — sin comparación 2026 (datos solo hasta marzo)
 
   // 4. Costos operativos controlados
-  const totalVentas = vv.total_2025||vv.total_2026||1;
+  const totalVentas = vv.total_2025||1;
   const opPctC = D.adm_op.op_total ? (D.adm_op.op_total/totalVentas*100).toFixed(1) : null;
   if(opPctC&&parseFloat(opPctC)<12) oks.push({{cls:'ok',titulo:'Costos operativos directos controlados (~'+opPctC+'% de ventas)',
     txt:'Buena gestión de insumos.'}});
@@ -1778,18 +1839,17 @@ function buildConclusiones(){{
     const txns24 = vv.mensual_txns ? vv.mensual_txns.filter(t=>t.anio===2024).reduce((s,t)=>s+t.txns,0) : 0;
     const txnVar = txns24>0 ? ((txns25-txns24)/txns24*100).toFixed(1) : 0;
     const mesesNeg = fl.flujo_acum.filter(v=>v<0).length;
-    const nopYoY = D.no_op.total_2025>0 ? ((D.no_op.total_2026-D.no_op.total_2025)/D.no_op.total_2025*100).toFixed(0) : 0;
     const topProvNop = (D.no_op.proveedores||[]).sort((a,b)=>b.monto-a.monto)[0];
     const topProvPct = topProvNop&&D.no_op.total?(topProvNop.monto/D.no_op.total*100).toFixed(0):0;
     const tickAvg25 = vv.ticket_2025&&vv.ticket_2025.filter(t=>t>0).length ? vv.ticket_2025.filter(t=>t>0).reduce((a,b)=>a+b,0)/vv.ticket_2025.filter(t=>t>0).length : 0;
     const rows = [
-      ['Ventas 2026', MM(vv.total_2026), PCT(k.var_ventas)+' YoY', k.var_ventas>=0?'tg-g':'tg-r', k.var_ventas>=0?'OK':'ALERTA'],
+      ['Ventas 2025', MM(vv.total_2025), PCT(k.var_ventas)+' vs 2024', k.var_ventas>=0?'tg-g':'tg-r', k.var_ventas>=0?'OK':'ALERTA'],
       ['Cumplimiento Ppto '+D.eerr.mes, (tot26.cumpl||0).toFixed(1)+'%', (tot26.cumpl||0)>=100?'Sobre meta':'Bajo meta', (tot26.cumpl||0)>=100?'tg-g':'tg-a', (tot26.cumpl||0)>=100?'OK':'RIESGO'],
-      ['RRHH / Ventas', k.rrhh_ratio+'%', k.rrhh_ratio>70?'+'+((k.rrhh_ratio-45).toFixed(0))+'pp vs umbral':'+pp vs 2025', k.rrhh_ratio>70?'tg-r':k.rrhh_ratio>50?'tg-a':'tg-g', k.rrhh_ratio>70?'CRÍTICO':k.rrhh_ratio>50?'ALERTA':'OK'],
+      ['RRHH / Ventas 2025', k.rrhh_ratio+'%', k.rrhh_ratio>70?'+'+((k.rrhh_ratio-45).toFixed(0))+'pp vs umbral':'ref. 35-45%', k.rrhh_ratio>70?'tg-r':k.rrhh_ratio>50?'tg-a':'tg-g', k.rrhh_ratio>70?'CRÍTICO':k.rrhh_ratio>50?'ALERTA':'OK'],
       ['Flujo Acumulado Dic', MM(k.flujo_final), k.flujo_final<0?'Neg. '+mesesNeg+' meses':'Positivo', k.flujo_final<0?'tg-r':'tg-g', k.flujo_final<0?'CRÍTICO':'OK'],
-      ['Ticket Promedio', tickAvg25>0?CLP(tickAvg25):'—', PCT(k.ticket_var)+' en 2 años', k.ticket_var>=-10?'tg-g':'tg-a', k.ticket_var>=-10?'OK':'ALERTA'],
-      ['Gs No Operacionales', MM(D.no_op.total_2026||D.no_op.total), nopYoY+'% YoY', parseInt(nopYoY)<0?'tg-g':'tg-a', parseInt(nopYoY)<0?'OK':'RIESGO'],
-      ['Margen Operacional '+D.eerr.mes, k.margen_op.toFixed(1)+'%', '—', k.margen_op>30?'tg-g':k.margen_op>20?'tg-a':'tg-r', k.margen_op>30?'SANO':k.margen_op>20?'ALERTA':'CRÍTICO'],
+      ['Ticket Promedio 2025', tickAvg25>0?CLP(tickAvg25):'—', PCT(k.ticket_var)+' vs 2024', k.ticket_var>=-10?'tg-g':'tg-a', k.ticket_var>=-10?'OK':'ALERTA'],
+      ['Gs No Operacionales 2025', MM(D.no_op.total_2025||D.no_op.total), 'Dato real completo', 'tg-a', 'REVISAR'],
+      ['Margen Operacional '+D.eerr.mes+' 2026', k.margen_op.toFixed(1)+'%', 'datos hasta mar 2026', k.margen_op>30?'tg-g':k.margen_op>20?'tg-a':'tg-r', k.margen_op>30?'SANO':k.margen_op>20?'ALERTA':'CRÍTICO'],
       ['Sucursales <70% Cumpl.', sucsBad.length+' de '+(D.eerr.sucursales.filter(s=>s.nombre!=='TOTAL'&&s.ingresos>0).length), sucsBad.map(s=>s.nombre.replace('NCA ','')).join('+'), sucsBad.length>0?'tg-a':'tg-g', sucsBad.length>0?'RIESGO':'OK'],
       ['Transacciones 2025', NUM(txns25), txnVar+'% vs 2024', parseFloat(txnVar)>=0?'tg-g':'tg-a', parseFloat(txnVar)>=0?'OK':'ALERTA'],
       ['Concentración Mkt', topProvNop?'1 proveedor':'—', topProvNop?(topProvNop.prov+' '+topProvPct+'%'):'—', parseInt(topProvPct)>50?'tg-r':'tg-g', parseInt(topProvPct)>50?'RIESGO':'OK'],
@@ -1807,7 +1867,6 @@ function buildConclusiones(){{
 
 // ── INIT ──────────────────────────────────────────────────────────────────
 buildEERR();
-buildFlujo();
 buildVentas();
 buildDetalle();
 buildRRHH();
@@ -1935,8 +1994,8 @@ def main():
             print("OK")
 
         # ETL: Leyendo módulos
-        print("  Leyendo EERR...", end=" ", flush=True)
-        eerr = leer_eerr(xl)
+        print("  Leyendo EERR 2025 Anual...", end=" ", flush=True)
+        eerr = leer_eerr_2025_anual(xl)
         logger.info(f"EERR: {eerr['mes']} {eerr['anio']} - {len(eerr['sucursales'])} sucursales")
         print(f"OK ({eerr['mes']} {eerr['anio']})")
 
