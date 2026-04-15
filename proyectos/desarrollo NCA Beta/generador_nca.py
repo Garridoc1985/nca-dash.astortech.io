@@ -1839,9 +1839,11 @@ function buildConclusiones(){{
     const txns24 = (vv.trans_2024||[]).reduce((s,v)=>s+v,0);
     const txnVar = txns24>0 ? ((txns25-txns24)/txns24*100).toFixed(1) : 0;
     const mesesNeg = fl.flujo_acum.filter(v=>v<0).length;
-    const topProvNop = (D.no_op.proveedores||[]).sort((a,b)=>b.monto-a.monto)[0];
-    const nProvNop = (D.no_op.proveedores||[]).length;
-    const topProvPct = topProvNop&&D.no_op.total?(topProvNop.monto/D.no_op.total*100).toFixed(0):0;
+    const provMkt = (D.no_op.proveedores||[]).filter(p=>p.tipo&&p.tipo.toLowerCase().includes('digital'));
+    const nProvNop = provMkt.length;
+    const topProvNop = provMkt.sort((a,b)=>b.monto-a.monto)[0];
+    const totalMkt = provMkt.reduce((s,p)=>s+p.monto,0);
+    const topProvPct = topProvNop&&totalMkt?(topProvNop.monto/totalMkt*100).toFixed(0):0;
     const tickAvg25 = vv.ticket_2025&&vv.ticket_2025.filter(t=>t>0).length ? vv.ticket_2025.filter(t=>t>0).reduce((a,b)=>a+b,0)/vv.ticket_2025.filter(t=>t>0).length : 0;
     const rows = [
       ['Ventas 2025', MM(vv.total_2025), PCT(k.var_ventas)+' vs 2024', k.var_ventas>=0?'tg-g':'tg-r', k.var_ventas>=0?'OK':'ALERTA'],
