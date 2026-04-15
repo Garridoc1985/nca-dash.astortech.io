@@ -70,7 +70,6 @@ cp "proyectos/desarrollo NCA Beta/.env.example" .env
 | `VENTAS_PORT` | Puerto dashboard ventas (default: 5001) |
 | `FLASK_ENV` | `development` o `production` |
 | `EXCEL_NCA_PATH` | Ruta al Excel NCA (opcional, se puede subir por interfaz) |
-| `ANTHROPIC_API_KEY` | API key de Anthropic (solo para agentes IA) |
 
 ---
 
