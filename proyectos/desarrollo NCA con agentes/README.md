@@ -63,6 +63,12 @@ Excel del cliente
 
 ---
 
+## Instalación
+
+```bash
+pip install -r requirements.txt
+```
+
 ## Cómo ejecutarlo
 
 ### Comando único
@@ -167,6 +173,7 @@ proyectos/desarrollo NCA con agentes/
 ├── mapper.py                 # Agente 2: genera mapa de columnas con IA
 ├── reconstructor.py          # Agente 3: normaliza DataFrames
 ├── generador.py              # Agente 4: orquesta pipeline completo
+├── requirements.txt          # Dependencias del proyecto
 ├── ultimo_reporte_inspector.json   # Salida del Inspector
 └── ultimo_mapa_columnas.json       # Salida del Mapper
 ```

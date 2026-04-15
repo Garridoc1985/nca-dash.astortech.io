@@ -6,6 +6,12 @@ Dashboard funcional con ETL desde Excel, servidores Flask y visualizaciones inte
 
 ---
 
+## Instalación
+
+```bash
+pip install -r requirements.txt
+```
+
 ## Cómo correr
 
 ```bash
@@ -54,7 +60,7 @@ desarrollo primera etapa/
 
 ## Stack
 
-- Python · Flask · pandas · Chart.js
+- Python · Flask · pandas · numpy · openpyxl · Chart.js
 - Autenticación configurable vía `users.json`
 - Sin dependencias de agentes IA ni APIs externas
 
