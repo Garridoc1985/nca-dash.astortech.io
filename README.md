@@ -27,7 +27,7 @@ Login → subir Excel → dashboard HTML generado automáticamente en el navegad
 - Dashboard Financiero NCA con 8 módulos (EERR, Flujo, Ventas, RRHH, Gastos, Marketing)
 - Dashboard de Ventas con normalización automática de reportes
 - Autenticación con usuarios configurables
-- Stack: Python, Flask, pandas, Chart.js
+- Stack: Python · Flask · pandas · numpy · openpyxl · Chart.js
 
 ---
 
@@ -53,6 +53,7 @@ python -X utf8 generador.py --file "ruta/al/archivo.xlsx"
 - `reconstructor.py` — normaliza DataFrames antes del ETL
 - `generador.py` — orquesta el pipeline completo
 - `adaptador_excel.py` — adaptación rápida sin IA (fuzzy matching)
+- Stack: Python · pandas · openpyxl · python-dotenv · Anthropic API (Claude Haiku) · Chart.js
 
 ---
 
@@ -78,6 +79,7 @@ chmod +x "proyectos/desarrollo NCA Beta/setup.sh"
 - Servidor WSGI con Gunicorn para producción (`wsgi.py`)
 - Variables de entorno seguras (`.env.example`)
 - Launcher Linux/Mac (`iniciar.sh`)
+- Stack: Python · Flask · Gunicorn · pandas · openpyxl · python-dotenv · Chart.js
 
 ---
 
