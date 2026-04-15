@@ -1847,7 +1847,6 @@ function buildConclusiones(){{
       ['Ventas 2025', MM(vv.total_2025), PCT(k.var_ventas)+' vs 2024', k.var_ventas>=0?'tg-g':'tg-r', k.var_ventas>=0?'OK':'ALERTA'],
       ['Cumplimiento Ppto '+D.eerr.mes, (tot26.cumpl||0).toFixed(1)+'%', (tot26.cumpl||0)>=100?'Sobre meta':'Bajo meta', (tot26.cumpl||0)>=100?'tg-g':'tg-a', (tot26.cumpl||0)>=100?'OK':'RIESGO'],
       ['RRHH / Ventas 2025', k.rrhh_ratio+'%', k.rrhh_ratio>70?'+'+((k.rrhh_ratio-45).toFixed(0))+'pp vs umbral':'ref. 35-45%', k.rrhh_ratio>70?'tg-r':k.rrhh_ratio>50?'tg-a':'tg-g', k.rrhh_ratio>70?'CRÍTICO':k.rrhh_ratio>50?'ALERTA':'OK'],
-      ['Flujo Acumulado Dic', MM(k.flujo_final), k.flujo_final<0?'Neg. '+mesesNeg+' meses':'Positivo', k.flujo_final<0?'tg-r':'tg-g', k.flujo_final<0?'CRÍTICO':'OK'],
       ['Ticket Promedio 2025', tickAvg25>0?CLP(tickAvg25):'—', PCT(k.ticket_var)+' vs 2024', k.ticket_var>=-10?'tg-g':'tg-a', k.ticket_var>=-10?'OK':'ALERTA'],
       ['Gs No Operacionales 2025', MM(D.no_op.total_2025||D.no_op.total), 'Dato real completo', 'tg-a', 'REVISAR'],
       ['Margen Operacional 2025', k.margen_op.toFixed(1)+'%', 'año completo', k.margen_op>30?'tg-g':k.margen_op>20?'tg-a':'tg-r', k.margen_op>30?'SANO':k.margen_op>20?'ALERTA':'CRÍTICO'],
