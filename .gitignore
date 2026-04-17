@@ -34,6 +34,9 @@ env/
 .claude/settings.local.json
 .mcp.json
 .claude/output/
+.claude-flow/
+memory/
+logs/
 
 # Repos anidados (tienen su propio git)
 proyectos/desarrollo NCA Beta/

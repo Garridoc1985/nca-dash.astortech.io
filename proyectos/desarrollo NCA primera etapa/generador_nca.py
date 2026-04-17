@@ -26,12 +26,6 @@ import sys
 from pathlib import Path
 
 import pandas as pd
-from adaptador_excel import (
-    leer_eerr_robusto,
-    leer_marketing_robusto,
-    leer_hoja_con_header_robusto,
-    diagnosticar_excel,
-)
 
 # Skill está en .claude/skills/dashboard-financiero-nca/ → workspace es 3 niveles arriba
 SKILL_DIR     = Path(__file__).parent
@@ -116,6 +110,40 @@ def cargar_configuracion():
 EXCEL_DEFAULT = cargar_configuracion()
 OUTPUT_DEFAULT = WORKSPACE / "output" / "dashboard_nca.html"
 
+# Nombres de hojas por defecto (NCA original)
+SHEET_DEFAULTS = {
+    "eerr":           "EERR",
+    "flujo":          "FLUJO",
+    "ventas":         "1 VENTA",
+    "ventas_detalle": "VENTAS DETALLE",
+    "rrhh":           "2 RRHH",
+    "gs_admin":       "3 GS ADMIN",
+    "gs_op":          "4 GS OP",
+    "gs_no_op":       "5 GS NO OP",
+    "marketing":      "MARKETING",
+}
+
+def cargar_sheet_map() -> dict:
+    """
+    Lee la sección [sheets] de config.ini para permitir mapeo personalizado de hojas.
+    Si una clave no está en config, usa el nombre por defecto de SHEET_DEFAULTS.
+    """
+    mapping = dict(SHEET_DEFAULTS)
+    if CONFIG_FILE.exists():
+        try:
+            config = configparser.ConfigParser()
+            config.read(CONFIG_FILE, encoding='utf-8')
+            if config.has_section('sheets'):
+                for key in SHEET_DEFAULTS:
+                    val = config.get('sheets', key, fallback=None)
+                    if val:
+                        mapping[key] = val.strip()
+        except Exception as e:
+            logger.warning(f"⚠️  Error leyendo [sheets] de config.ini: {e}")
+    return mapping
+
+SHEET_MAP = cargar_sheet_map()
+
 MES_MAP = {
     "ene": 1, "feb": 2, "mar": 3, "abr": 4, "may": 5, "jun": 6,
     "jul": 7, "ago": 8, "sept": 9, "sep": 9, "oct": 10, "nov": 11, "dic": 12,
@@ -199,12 +227,58 @@ def categorizar_concepto(tipo_gasto: str) -> str:
         return " ".join(palabras[:2]).title() if palabras else "Otro"
 
 
+# ─── DEFAULTS PARA MÓDULOS SIN HOJA ──────────────────────────────────────────
+
+_Z12 = [0.0] * 12  # lista de 12 ceros para series mensuales
+
+_DEFAULTS = {
+    "eerr":   {"anio": 2026, "mes": "N/D", "mes_num": 0, "sucursales": []},
+    "flujo":  {"saldo_inicial": _Z12, "ingresos": _Z12, "gs_rrhh": _Z12,
+               "gs_adm_op": _Z12, "gs_nop": _Z12, "utilidad_neta": _Z12,
+               "flujo_caja": _Z12, "flujo_acum": _Z12,
+               "ppm_pct": _Z12, "ppm_val": _Z12, "labels": MES_LABELS},
+    "ventas": {"labels": MES_LABELS, "ventas_2024": _Z12, "ventas_2025": _Z12,
+               "ventas_2026": _Z12, "total_2024": 0, "total_2025": 0, "total_2026": 0,
+               "sucursales": [], "suc_data": {}, "ticket_2024": 0, "ticket_2025": 0,
+               "trans_2024": 0, "trans_2025": 0, "top_trat": [],
+               "ticket_suc": [], "tipo_prod": [], "total_txns": 0},
+    "rrhh":   {"labels": MES_LABELS, "rrhh_2025": _Z12, "rrhh_2026": _Z12,
+               "total_2025": 0, "total_2026": 0, "tipo_gasto": []},
+    "adm_op": {"adm_tipo": [], "op_tipo": [], "adm_total": 0, "op_total": 0,
+               "adm_series": {}, "op_series": {}},
+    "no_op":  {"tipo": [], "proveedores": [], "total": 0,
+               "total_2025": 0, "total_2026": 0, "digital_2025": 0, "digital_2026": 0},
+    "mkt":    {"labels": MES_LABELS, "mkt_2024": _Z12, "mkt_2025": _Z12,
+               "mkt_2026": _Z12, "total_mkt_2024": 0, "total_mkt_2025": 0,
+               "total_mkt_2026": 0, "roi_data": []},
+    "seg":    {"por_sucursal": [], "margen_pct_global": 0.0,
+               "total_ingresos": 0, "total_costos": 0, "total_margen": 0},
+}
+
+
+def _leer_safe(fn, xl, key: str):
+    """
+    Ejecuta fn(xl) y devuelve su resultado.
+    Si la hoja no existe (ValueError), registra el aviso y devuelve el dict vacío
+    correspondiente, permitiendo que el dashboard se genere de todas formas.
+    """
+    try:
+        return fn(xl)
+    except ValueError as e:
+        logger.warning(f"⚠️  Módulo '{key}' omitido — {e}")
+        print(f"OMITIDO ({e})")
+        return dict(_DEFAULTS[key])
+    except Exception as e:
+        logger.warning(f"⚠️  Módulo '{key}' con error inesperado — {e}")
+        print(f"ERROR ({e})")
+        return dict(_DEFAULTS[key])
+
+
 # ─── ETL: EERR ────────────────────────────────────────────────────────────────
 
 def leer_eerr(xl) -> dict:
     """Lee hoja EERR → dict con datos por sucursal del último mes disponible."""
-    return leer_eerr_robusto(xl)
-    df = pd.read_excel(xl, sheet_name="EERR", header=None)
+    df = pd.read_excel(xl, sheet_name=SHEET_MAP["eerr"], header=None)
 
     # Determinar año/mes
     anio = _v(df.iloc[0, 3], 2026)
@@ -233,7 +307,7 @@ def leer_eerr(xl) -> dict:
 
 def leer_flujo(xl) -> dict:
     """Lee hoja FLUJO → dict con datos de flujo mensual 2026."""
-    df = pd.read_excel(xl, sheet_name="FLUJO", header=None)
+    df = pd.read_excel(xl, sheet_name=SHEET_MAP["flujo"], header=None)
 
     # Fila 2 tiene header (Item/Mes | fechas)
     # Cols 1-12 son los meses
@@ -274,7 +348,7 @@ def leer_flujo(xl) -> dict:
 def leer_ventas(xl) -> dict:
     """Lee 1 VENTA y VENTAS DETALLE → dict con consolidados y tratamientos."""
     # Mensual por año/mes/sucursal
-    df1 = pd.read_excel(xl, sheet_name="1 VENTA")
+    df1 = pd.read_excel(xl, sheet_name=SHEET_MAP["ventas"])
     df1["mes_num"] = df1["Mes"].apply(_mes_num)
     df1 = df1[df1["mes_num"] > 0]
 
@@ -315,7 +389,7 @@ def leer_ventas(xl) -> dict:
             suc_data[suc][anio] = _v(sub["Venta"].sum()) if len(sub) else 0.0
 
     # Ticket promedio mensual (transacciones desde VENTAS DETALLE)
-    df_det = pd.read_excel(xl, sheet_name="VENTAS DETALLE")
+    df_det = pd.read_excel(xl, sheet_name=SHEET_MAP["ventas_detalle"])
     df_det["Año"]     = df_det["Fecha Venta"].dt.year
     df_det["mes_num"] = df_det["Fecha Venta"].dt.month
 
@@ -395,7 +469,7 @@ def _trans_serie(df, anio):
 # ─── ETL: RRHH ────────────────────────────────────────────────────────────────
 
 def leer_rrhh(xl) -> dict:
-    df = pd.read_excel(xl, sheet_name="2 RRHH")
+    df = pd.read_excel(xl, sheet_name=SHEET_MAP["rrhh"])
     df["mes_num"] = df["Mes"].apply(_mes_num)
     df = df[df["mes_num"] > 0]
 
@@ -425,7 +499,7 @@ def leer_rrhh(xl) -> dict:
     rrhh_suc_2026 = df[df["Año"] == 2026].groupby("Sucursal")["Importe"].sum()
 
     # Ratio RRHH/Ventas por sucursal (2025)
-    df_v1 = pd.read_excel(xl, sheet_name="1 VENTA")
+    df_v1 = pd.read_excel(xl, sheet_name=SHEET_MAP["ventas"])
     v2025_suc = df_v1[df_v1["Año"] == 2025].groupby("Sucursal")["Venta"].sum()
 
     sucursales_ratio = sorted(set(list(rrhh_suc_2025.index) + list(v2025_suc.index)))
@@ -467,8 +541,8 @@ def leer_rrhh(xl) -> dict:
 # ─── ETL: GASTOS ADMIN + OP ───────────────────────────────────────────────────
 
 def leer_admin_op(xl) -> dict:
-    df_adm = pd.read_excel(xl, sheet_name="3 GS ADMIN")
-    df_op  = pd.read_excel(xl, sheet_name="4 GS OP")
+    df_adm = pd.read_excel(xl, sheet_name=SHEET_MAP["gs_admin"])
+    df_op  = pd.read_excel(xl, sheet_name=SHEET_MAP["gs_op"])
 
     adm_tipo = (
         df_adm.groupby("Tipo de gasto")["Monto Bruto"]
@@ -513,7 +587,7 @@ def leer_admin_op(xl) -> dict:
 # ─── ETL: GASTOS NO OP ────────────────────────────────────────────────────────
 
 def leer_no_op(xl) -> dict:
-    df = pd.read_excel(xl, sheet_name="5 GS NO OP")
+    df = pd.read_excel(xl, sheet_name=SHEET_MAP["gs_no_op"])
 
     tipo = (
         df.groupby("Tipo de gasto")["Monto Bruto"]
@@ -554,8 +628,7 @@ def leer_no_op(xl) -> dict:
 # ─── ETL: MARKETING ───────────────────────────────────────────────────────────
 
 def leer_marketing(xl) -> dict:
-    return leer_marketing_robusto(xl)
-    df = pd.read_excel(xl, sheet_name="MARKETING", header=None)
+    df = pd.read_excel(xl, sheet_name=SHEET_MAP["marketing"], header=None)
     # Fila 3 es el header
     df.columns = df.iloc[3].tolist()
     df = df.iloc[4:16].reset_index(drop=True)
@@ -612,7 +685,7 @@ def segmentar_costos(xl) -> dict:
     Retorna dict con resumen por sucursal y totales globales.
     """
     # Ventas mensuales por sucursal (desde hoja 1 VENTA)
-    df1 = pd.read_excel(xl, sheet_name="1 VENTA")
+    df1 = pd.read_excel(xl, sheet_name=SHEET_MAP["ventas"])
     df1["mes_num"] = df1["Mes"].apply(_mes_num)
     df1 = df1[df1["mes_num"] > 0].copy()
     df1["Periodo"] = df1.apply(lambda r: f"{int(r['Año'])}-{int(r['mes_num']):02d}", axis=1)
@@ -622,7 +695,7 @@ def segmentar_costos(xl) -> dict:
     )
 
     # Transacciones por periodo+sucursal (desde VENTAS DETALLE)
-    df_det = pd.read_excel(xl, sheet_name="VENTAS DETALLE")
+    df_det = pd.read_excel(xl, sheet_name=SHEET_MAP["ventas_detalle"])
     df_det["Año"]     = df_det["Fecha Venta"].dt.year
     df_det["mes_num"] = df_det["Fecha Venta"].dt.month
     df_det["Periodo"] = df_det.apply(lambda r: f"{int(r['Año'])}-{int(r['mes_num']):02d}", axis=1)
@@ -994,12 +1067,12 @@ tr:hover td{{background:var(--s2)}}
 
 <!-- === M3: VENTAS === -->
 <section class="sec" id="m3">
-<h2>Módulo 3 · Ventas Consolidadas 2024–2025</h2>
+<h2>Módulo 3 · Ventas Consolidadas 2024–2026</h2>
 <div class="g4" id="kpi-ventas"></div>
 <div class="c" style="margin-bottom:16px"><h3>Evolución de Ventas Mensuales</h3><div class="cw cw-t"><canvas id="c6"></canvas></div></div>
 <div class="g2">
 <div class="c"><h3>Ventas Anuales por Sucursal</h3><div class="cw cw-t"><canvas id="c7"></canvas></div></div>
-<div class="c"><h3>Participación Interna 2025</h3><div class="cw cw-t"><canvas id="c8"></canvas></div></div>
+<div class="c"><h3>Participación Interna 2026</h3><div class="cw cw-t"><canvas id="c8"></canvas></div></div>
 </div>
 <div id="ib-ventas"></div>
 </section>
@@ -1028,8 +1101,8 @@ tr:hover td{{background:var(--s2)}}
 <h2>Módulo 5 · Gastos de Personal (RRHH)</h2>
 <div class="g4" id="kpi-rrhh"></div>
 <div class="g2">
-<div class="c"><h3>Evolución Mensual RRHH 2025</h3><div class="cw"><canvas id="c13"></canvas></div></div>
-<div class="c"><h3>RRHH como % de Ventas por Sucursal (2025)</h3><div class="cw"><canvas id="c14"></canvas></div></div>
+<div class="c"><h3>Evolución Mensual RRHH (2025 vs 2026)</h3><div class="cw"><canvas id="c13"></canvas></div></div>
+<div class="c"><h3>RRHH como % de Ventas por Sucursal (2026)</h3><div class="cw"><canvas id="c14"></canvas></div></div>
 </div>
 <div class="c" style="margin-bottom:16px"><h3>Composición del Gasto de Personal</h3><div class="cw cw-s"><canvas id="c15"></canvas></div></div>
 <div class="c" style="margin-bottom:16px"><h3>Detalle Composición Personal (acumulado)</h3>
@@ -1290,6 +1363,7 @@ function buildFlujo(){{
 function buildVentas(){{
   const v = D.ventas;
   const pct25 = ((v.total_2025-v.total_2024)/v.total_2024*100).toFixed(1);
+  const pct26 = ((v.total_2026-v.total_2025)/v.total_2025*100).toFixed(1);
   const tickAvg25 = v.ticket_2025.filter(t=>t>0).reduce((a,b)=>a+b,0)/(v.ticket_2025.filter(t=>t>0).length||1);
   const tickAvg24 = v.ticket_2024.filter(t=>t>0).reduce((a,b)=>a+b,0)/(v.ticket_2024.filter(t=>t>0).length||1);
   const tickVar   = ((tickAvg25-tickAvg24)/tickAvg24*100).toFixed(1);
@@ -1297,13 +1371,14 @@ function buildVentas(){{
   document.getElementById('kpi-ventas').innerHTML =
     kpiCard('Venta 2024', MM(v.total_2024),'') +
     kpiCard('Venta 2025', MM(v.total_2025), PCT(parseFloat(pct25)), parseFloat(pct25)>=0?'dg':'dr') +
-    kpiCard('Promedio Mensual 2025', MM(v.total_2025/12), '', '') +
-    kpiCard('Var. Ticket 2024→2025', PCT(parseFloat(tickVar)), '', parseFloat(tickVar)>=0?'dg':'dr');
+    kpiCard('Venta Proy 2026', MM(v.total_2026), PCT(parseFloat(pct26)), parseFloat(pct26)>=0?'dg':'dr') +
+    kpiCard('Promedio Mensual 2026', MM(v.total_2026/12), PCT(parseFloat(tickVar)), parseFloat(tickVar)>=0?'dg':'dr');
 
   // C6 lineas 3 años
   mkChart('c6','line',v.labels,[
     {{label:'2024',data:v.v2024,borderColor:CL.p,borderWidth:2,pointRadius:2,fill:false,tension:.3}},
     {{label:'2025',data:v.v2025,borderColor:CL.a,borderWidth:2,pointRadius:2,fill:false,tension:.3}},
+    {{label:'2026 (Proy.)',data:v.v2026,borderColor:CL.b,borderWidth:2,pointRadius:2,fill:false,tension:.3,borderDash:[4,4]}}
   ],{{scales:{{y:{{ticks:{{callback:v=>MM(v)}}}}}}}});
 
   // C7 barras por sucursal — suc_data keys son strings en JSON
@@ -1311,12 +1386,13 @@ function buildVentas(){{
   mkChart('c7','bar',sucs,[
     {{label:'2024',data:v.suc_totals.map(s=>v.suc_data?.[s.suc]?.['2024']||0),backgroundColor:'rgba(167,139,250,.6)',borderRadius:3}},
     {{label:'2025',data:v.suc_totals.map(s=>v.suc_data?.[s.suc]?.['2025']||0),backgroundColor:'rgba(245,158,11,.6)',borderRadius:3}},
+    {{label:'2026',data:v.suc_totals.map(s=>s.v26),backgroundColor:'rgba(56,189,248,.6)',borderRadius:3}}
   ],{{scales:{{y:{{ticks:{{callback:v=>MM(v)}}}}}}}});
 
-  // C8 donut participacion 2025
+  // C8 donut participacion 2026
   new Chart(document.getElementById('c8'),{{type:'doughnut',data:{{
     labels:v.suc_totals.map(s=>s.suc.replace('NCA ','')),
-    datasets:[{{data:v.suc_totals.map(s=>v.suc_data?.[s.suc]?.['2025']||0),backgroundColor:v.suc_totals.map((_,i)=>PALETTE[i%PALETTE.length]),borderWidth:0}}]
+    datasets:[{{data:v.suc_totals.map(s=>s.v26),backgroundColor:v.suc_totals.map((_,i)=>PALETTE[i%PALETTE.length]),borderWidth:0}}]
   }},options:{{responsive:true,maintainAspectRatio:false,plugins:{{legend:{{position:'right',labels:{{boxWidth:10}}}},tooltip:{{callbacks:{{label:c=>c.label+': '+MM(c.raw)}}}}  }}}}}});
 
   // C11 transacciones
@@ -1334,14 +1410,14 @@ function buildVentas(){{
   // Info boxes
   const ibV = document.getElementById('ib-ventas');
   if(ibV){{
-    if(parseFloat(pct25)>0) ibV.innerHTML+=`<div class="ib ok"><b>🟢 Ventas 2025 crecieron +${{pct25}}% vs 2024</b>Estacionalidad consistente: Q4 (oct-nov) generan los mejores meses del año.</div>`;
-    else ibV.innerHTML+=`<div class="ib al"><b>🔴 Caída en ventas 2025 (${{pct25}}% vs 2024)</b>Revisar mix de productos y canales de captación.</div>`;
+    if(parseFloat(pct26)>0) ibV.innerHTML+=`<div class="ib ok"><b>🟢 Recuperación parcial en 2026 (+${{pct26}}% vs 2025)</b>Las ventas proyectadas recuperan terreno tras la caída del ${{Math.abs(parseFloat(pct25)).toFixed(1)}}% en 2025. Estacionalidad consistente: Q4 (oct-nov) generan los mejores meses.</div>`;
+    else ibV.innerHTML+=`<div class="ib al"><b>🔴 Caída en ventas 2026 (${{pct26}}% vs 2025)</b>Revisar mix de productos y canales de captación.</div>`;
     // Face & Body contraction
     const fbKey=Object.keys(v.suc_data).find(k=>k.toLowerCase().includes('face'));
     if(fbKey){{
-      const fb24=v.suc_data[fbKey]['2024']||0, fb25=v.suc_data[fbKey]['2025']||0;
-      if(fb24>0&&fb25<fb24*0.85)
-        ibV.innerHTML+=`<div class="ib cau"><b>🟡 ${{fbKey.replace('NCA ','')}}: contracción del ${{((fb24-fb25)/fb24*100).toFixed(0)}}% desde 2024</b>Pasó de ${{MM(fb24)}} (2024) a ${{MM(fb25)}} (2025). Revisar mix de tratamientos y estrategia comercial.</div>`;
+      const fb24=v.suc_data[fbKey]['2024']||0, fb26=v.suc_data[fbKey]['2026']||0;
+      if(fb24>0&&fb26<fb24*0.85)
+        ibV.innerHTML+=`<div class="ib cau"><b>🟡 ${{fbKey.replace('NCA ','')}}: contracción acumulada del ${{((fb24-fb26)/fb24*100).toFixed(0)}}% desde 2024</b>Pasó de ${{MM(fb24)}} (2024) a ${{MM(fb26)}} (2026). Therapy creció por nueva operación pero con costos RRHH que superan sus ingresos.</div>`;
     }}
     if(parseFloat(tickVar)<-10) ibV.innerHTML+=`<div class="ib al"><b>🔴 Ticket promedio cayó de ${{CLP(v.ticket_2024[0])}} (ene-24) a ${{CLP(v.ticket_2025[11])}} (dic-25): ${{tickVar}}%</b>La caída sostenida del ticket sugiere más descuentos, promociones agresivas o migración hacia tratamientos de menor valor.</div>`;
   }}
@@ -1394,18 +1470,19 @@ function buildDetalle(){{
 // ── M5 RRHH ───────────────────────────────────────────────────────────────
 function buildRRHH(){{
   const r = D.rrhh;
-  const ratio   = (r.total_2025/D.ventas.total_2025*100).toFixed(1);
-  const mensual_2025 = r.r2025.filter(v=>v>0).length ? r.r2025.reduce((s,v)=>s+v,0)/r.r2025.filter(v=>v>0).length : 0;
+  const var_pct = ((r.total_2026-r.total_2025)/r.total_2025*100).toFixed(1);
+  const ratio   = (r.total_2026/D.ventas.total_2026*100).toFixed(1);
 
   document.getElementById('kpi-rrhh').innerHTML =
     kpiCard('RRHH 2025', MM(r.total_2025),'') +
-    kpiCard('RRHH/Ventas 2025', ratio+'%', '', parseFloat(ratio)>50?'dr':parseFloat(ratio)>35?'da':'dg') +
-    kpiCard('Costo Mensual 2025', MM(mensual_2025),'') +
-    kpiCard('Meses con Datos', r.r2025.filter(v=>v>0).length+' de 12', '', '');
+    kpiCard('RRHH 2026', MM(r.total_2026), PCT(parseFloat(var_pct)), parseFloat(var_pct)>0?'dr':'dg') +
+    kpiCard('RRHH/Ventas 2026', ratio+'%', '', parseFloat(ratio)>50?'dr':parseFloat(ratio)>35?'da':'dg') +
+    kpiCard('Costo Mensual Estable', MM(r.r2026.reduce((s,v)=>s+v,0)/r.r2026.filter(v=>v>0).length),'');
 
   // C13 lineas
   mkChart('c13','line',r.labels,[
-    {{label:'2025',data:r.r2025,borderColor:CL.p,borderWidth:2,pointRadius:2,fill:false,tension:.3}}
+    {{label:'2025',data:r.r2025,borderColor:CL.p,borderWidth:2,pointRadius:2,fill:false,tension:.3}},
+    {{label:'2026',data:r.r2026,borderColor:CL.r,borderWidth:2,pointRadius:2,fill:false,tension:.3}}
   ],{{scales:{{y:{{ticks:{{callback:v=>MM(v)}}}}}}}});
 
   // C15 donut composicion
@@ -1450,7 +1527,7 @@ function buildRRHH(){{
   const ibR = document.getElementById('ib-rrhh');
   if(ibR){{
     const ratioN = parseFloat(ratio);
-    if(ratioN>70) ibR.innerHTML+=`<div class="ib al"><b>🔴 CRÍTICO: RRHH/Ventas en ${{ratio}}% — muy sobre umbral recomendado</b>Un nivel saludable para estética es 35-45%. El ratio actual requiere plan de reducción de costos de personal.</div>`;
+    if(ratioN>70) ibR.innerHTML+=`<div class="ib al"><b>🔴 CRÍTICO: RRHH creció ${{var_pct}}% vs ventas +${{D.kpis.var_ventas.toFixed(1)}}%</b>El ratio RRHH/Ventas saltó de ~45% (2025) a ${{ratio}}% (2026). Un nivel saludable para estética es 35-45%. Requiere plan de reducción de costos de personal.</div>`;
     // Per-sucursal worst analysis
     const worstSucs=(r.ratio_suc||[]).filter(s=>s.ratio>90).slice(0,2);
     if(worstSucs.length>=2)
@@ -1916,66 +1993,71 @@ def main():
         print(f"  Archivo: {excel_path.name}\n")
 
         xl = pd.ExcelFile(excel_path, engine="openpyxl")
-        logger.info(f"📖 Excel abierto: {excel_path.name} — {len(xl.sheet_names)} hojas")
+        hojas_disponibles = xl.sheet_names
+        logger.info(f"📖 Excel abierto con {len(hojas_disponibles)} hojas: {hojas_disponibles}")
 
-        # Diagnóstico y auto-adaptación del Excel
-        print("  Analizando estructura del Excel...", end=" ", flush=True)
-        diagnostico = diagnosticar_excel(xl)
-        alertas = [h for h, r in diagnostico.items() if r["estado"] not in ("OK", "ADAPTADO")]
-        adaptados = [h for h, r in diagnostico.items() if r["estado"] == "ADAPTADO"]
-        if adaptados:
-            print(f"ADAPTADO ({', '.join(adaptados)})")
-            for h in adaptados:
-                logger.warning(f"⚠️  Hoja '{h}' adaptada: {diagnostico[h]['detalle']}")
-        elif alertas:
-            print(f"ADVERTENCIAS ({', '.join(alertas)})")
-            for h in alertas:
-                logger.warning(f"⚠️  Hoja '{h}': {diagnostico[h]['detalle']}")
+        # Diagnóstico: verificar qué hojas esperadas existen
+        faltantes = [k for k, v in SHEET_MAP.items() if v not in hojas_disponibles]
+        if faltantes:
+            print(f"\n  ⚠️  Hojas disponibles en el Excel:")
+            for h in hojas_disponibles:
+                print(f"       · {h}")
+            print(f"\n  ⚠️  Módulos sin hoja mapeada (se saltarán): {', '.join(faltantes)}")
+            print(f"     → Actualiza [sheets] en config.ini para mapearlos.")
+            print()
         else:
-            print("OK")
+            logger.info("✅ Todas las hojas requeridas encontradas")
 
-        # ETL: Leyendo módulos
+        # ETL: Leyendo módulos con validación (hojas faltantes se omiten con datos vacíos)
         print("  Leyendo EERR...", end=" ", flush=True)
-        eerr = leer_eerr(xl)
+        eerr = _leer_safe(leer_eerr, xl, "eerr")
         logger.info(f"EERR: {eerr['mes']} {eerr['anio']} - {len(eerr['sucursales'])} sucursales")
-        print(f"OK ({eerr['mes']} {eerr['anio']})")
+        if eerr['sucursales']:
+            print(f"OK ({eerr['mes']} {eerr['anio']})")
 
         print("  Leyendo Flujo de Caja...", end=" ", flush=True)
-        flujo = leer_flujo(xl)
+        flujo = _leer_safe(leer_flujo, xl, "flujo")
         neg_meses = len([v for v in flujo['flujo_caja'] if v < 0])
         logger.info(f"Flujo: {neg_meses} meses con flujo negativo")
-        print(f"OK ({neg_meses} meses negativos)")
+        if any(flujo['flujo_caja']):
+            print(f"OK ({neg_meses} meses negativos)")
 
         print("  Leyendo Ventas...", end=" ", flush=True)
-        ventas = leer_ventas(xl)
+        ventas = _leer_safe(leer_ventas, xl, "ventas")
         logger.info(f"Ventas: {ventas['total_txns']:,} transacciones")
-        print(f"OK ({ventas['total_txns']:,} transacciones)")
+        if ventas['total_txns']:
+            print(f"OK ({ventas['total_txns']:,} transacciones)")
 
         print("  Leyendo RRHH...", end=" ", flush=True)
-        rrhh = leer_rrhh(xl)
+        rrhh = _leer_safe(leer_rrhh, xl, "rrhh")
         logger.info(f"RRHH: 2025=${rrhh['total_2025']/1e9:.2f}B | 2026=${rrhh['total_2026']/1e9:.2f}B")
-        print(f"OK (2025: ${rrhh['total_2025']/1e9:.2f}B | 2026: ${rrhh['total_2026']/1e9:.2f}B)")
+        if rrhh['total_2025'] or rrhh['total_2026']:
+            print(f"OK (2025: ${rrhh['total_2025']/1e9:.2f}B | 2026: ${rrhh['total_2026']/1e9:.2f}B)")
 
         print("  Leyendo Gastos Adm+Op...", end=" ", flush=True)
-        adm_op = leer_admin_op(xl)
+        adm_op = _leer_safe(leer_admin_op, xl, "adm_op")
         logger.info(f"Admin+Op: Adm=${adm_op['adm_total']/1e6:.0f}M | Op=${adm_op['op_total']/1e6:.0f}M")
-        print(f"OK (Adm: ${adm_op['adm_total']/1e6:.0f}M | Op: ${adm_op['op_total']/1e6:.0f}M)")
+        if adm_op['adm_total'] or adm_op['op_total']:
+            print(f"OK (Adm: ${adm_op['adm_total']/1e6:.0f}M | Op: ${adm_op['op_total']/1e6:.0f}M)")
 
         print("  Leyendo Gastos No Operacionales...", end=" ", flush=True)
-        no_op = leer_no_op(xl)
+        no_op = _leer_safe(leer_no_op, xl, "no_op")
         logger.info(f"No Op: ${no_op['total']/1e6:.0f}M - {len(no_op['proveedores'])} proveedores")
-        print(f"OK (${no_op['total']/1e6:.0f}M total)")
+        if no_op['total']:
+            print(f"OK (${no_op['total']/1e6:.0f}M total)")
 
         print("  Leyendo Marketing...", end=" ", flush=True)
-        mkt = leer_marketing(xl)
+        mkt = _leer_safe(leer_marketing, xl, "mkt")
         logger.info(f"Marketing: 2024=${mkt['total_mkt_2024']/1e6:.0f}M | 2025=${mkt['total_mkt_2025']/1e6:.0f}M | 2026=${mkt['total_mkt_2026']/1e6:.0f}M")
-        print(f"OK")
+        if mkt['total_mkt_2024'] or mkt['total_mkt_2025'] or mkt['total_mkt_2026']:
+            print(f"OK")
 
         print("  Segmentando costos por sucursal...", end=" ", flush=True)
-        seg = segmentar_costos(xl)
+        seg = _leer_safe(segmentar_costos, xl, "seg")
         n_suc = len(seg.get("por_sucursal", []))
         logger.info(f"Segmentación: {n_suc} sucursales | Margen global={seg['margen_pct_global']:.1f}%")
-        print(f"OK ({n_suc} sucursales | Margen global: {seg['margen_pct_global']:.1f}%)")
+        if n_suc:
+            print(f"OK ({n_suc} sucursales | Margen global: {seg['margen_pct_global']:.1f}%)")
 
         # Generar HTML
         print("\n  Generando HTML...", flush=True)
