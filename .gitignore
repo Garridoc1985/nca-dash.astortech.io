@@ -38,5 +38,4 @@ env/
 memory/
 logs/
 
-# Repos anidados (tienen su propio git)
-proyectos/desarrollo NCA Beta/
+# (NCA Beta integrado al workspace — sin repo anidado)
