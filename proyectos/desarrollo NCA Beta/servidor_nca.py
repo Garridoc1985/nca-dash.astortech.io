@@ -279,7 +279,7 @@ UPLOAD_HTML = """<!DOCTYPE html>
 <div class="container">
   <div class="card">
     <h1>📊 Cargar Excel NCA</h1>
-    <p class="subtitle">Carga el archivo Excel para generar el dashboard financiero completo con 8 módulos de análisis.</p>
+    <p class="subtitle">Carga el archivo Excel para generar el dashboard financiero completo con 7 módulos de análisis.</p>
 
     <form id="uploadForm" method="POST" action="/procesar" enctype="multipart/form-data">
       <div class="drop-zone" id="dropZone">
@@ -315,7 +315,7 @@ UPLOAD_HTML = """<!DOCTYPE html>
   <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
   <div class="load-steps" id="loadSteps">
     <div class="step" id="s1">📥 Leyendo archivo Excel…</div>
-    <div class="step" id="s2">📊 Procesando EERR y Flujo de Caja…</div>
+    <div class="step" id="s2">📊 Procesando EERR y Ventas…</div>
     <div class="step" id="s3">📈 Analizando Ventas y RRHH…</div>
     <div class="step" id="s4">💰 Segmentando costos por sucursal…</div>
     <div class="step" id="s5">🎨 Generando dashboard HTML…</div>
